@@ -8,6 +8,22 @@ reference only. The dev server is the `pyrenees` entry in
 `~/Dropbox/.claude/launch.json` (port 4251); the Cloudflare Pages project is
 `pyrenees-site`.
 
+## Fresh clone
+
+```
+npm install
+npm run gen     # builds public/images/* and src/data/archive.json from
+                # scripts/source-images/ and CMS/*/images/ — required, the
+                # generated assets are not committed
+npm run dev
+```
+
+The Unica 77 LL web font is **not in this repo** (Lineto trial licence, internal
+evaluation only, and this repo is public). Drop
+`public/fonts/Unica77LLTrialWeb-Regular.woff2` in by hand, or the type falls
+back to Helvetica. Replace it with the licensed production cut before launch
+and remove the matching line from `.gitignore`.
+
 Astro 5 static site for Pyrenees Pictures Studio — an image creation studio for
 food, furniture & atmosphere, Tokyo. Rebuilt 2026-08-14 around one rule: the
 work renders as plain, crisp rectangles — **no WebGL, no warp, no filters on
