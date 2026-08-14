@@ -1,0 +1,216 @@
+---
+import Base from '../layouts/Base.astro';
+import T from '../components/T.astro';
+
+// About — the page answers one question: what kind of studio is this. The
+// answer is method-agnostic, so the statement leads with that and the body
+// explains what it means in practice. One typeface, so the contrast is
+// carried entirely by size: a very large statement against 12px text.
+//
+// Copy note: the statement and the sign-off are NEW drafts (2026-08-14),
+// written to replace the old subject-list tagline. They are standing drafts
+// awaiting the principal's approval. The two body paragraphs are carried
+// over from the previously approved text with the medium claim adjusted.
+---
+<Base
+  title="About — Pyrenees Pictures Studio"
+  description="An image studio in Tokyo. Live action to full CG, whatever the picture needs."
+>
+  <main class="page-wrapper ab">
+    <!-- ——— the statement ——— -->
+    <section class="ab__hero">
+      <h1 class="ab__st u-page">
+        An image studio in Tokyo. We make pictures by whatever means the
+        picture needs, from live action to full CG, and the choice is made
+        late, by the picture rather than by the tools we happen to own. What
+        we hand over is not a record of a room that exists. It is the room.
+      </h1>
+    </section>
+
+    <!-- ——— the band: who and where, then the dense columns ——— -->
+    <section class="ab__band">
+      <div class="ab__row">
+        <p class="ab__who">
+          <T en="A picture company, Tokyo." ja="東京のイメージメークスタジオ。" />
+        </p>
+        <span class="u-data">1</span>
+      </div>
+
+      <div class="ab__cols">
+        <p>
+          <T
+            en="Pyrenees Pictures Studio makes images without committing to a medium in advance. A frame may be photographed, built entirely in CG, or assembled across the seam between the two. The decision is made by the picture, late, and never by the tool we happen to own."
+            ja="ピレネー ピクチャーズ スタジオは、媒体を先に決めずにイメージをつくります。撮影するか、CGで組み上げるか、その境目でつなぐか。決めるのは常に画であって、手元にある道具ではありません。"
+          />
+        </p>
+        <p>
+          <T
+            en="Most projects begin as a single space. A dining room at dusk, a kitchen before service, a hallway nobody has walked through yet. We furnish it, light it, and hold it there until it feels operational, one service away from opening. What we deliver is not a picture of a room. It is a room that happens to exist as one."
+            ja="多くの仕事は、ひとつの空間から始まります。夕暮れのダイニング、開店前の厨房、まだ誰も歩いていない廊下。そこに家具を置き、光を当て、いつ営業が始まってもおかしくない状態になるまで手を入れます。届けるのは部屋の写真ではなく、写真としてだけ存在する部屋です。"
+          />
+        </p>
+      </div>
+
+      <div class="ab__row ab__row--foot">
+        <span class="u-data">2</span>
+        <p class="ab__sign">
+          <T
+            en="The method is negotiable. The picture is not."
+            ja="手段は選ばない。画だけは譲らない。"
+          />
+        </p>
+      </div>
+    </section>
+
+    <!-- ——— numbered rows ——— -->
+    <section class="ab__sec">
+      <h2 class="u-sect ab__h2">Services</h2>
+      <div class="ab__rows">
+        <div class="ab__r">
+          <span class="u-data ab__n">01</span>
+          <h3 class="ab__t">Images</h3>
+          <p class="ab__d">
+            <T
+              en="Stills for products, food, furniture and interiors. Photographed, rendered, or both."
+              ja="プロダクト、食、家具、インテリアのスチール。撮影、CG、その併用。"
+            />
+          </p>
+        </div>
+        <div class="ab__r">
+          <span class="u-data ab__n">02</span>
+          <h3 class="ab__t">Spaces</h3>
+          <p class="ab__d">
+            <T
+              en="Rooms and sets built to be photographed, whether or not they are ever built."
+              ja="撮られるためにつくる部屋とセット。実在するかどうかは問いません。"
+            />
+          </p>
+        </div>
+        <div class="ab__r">
+          <span class="u-data ab__n">03</span>
+          <h3 class="ab__t">Direction</h3>
+          <p class="ab__d">
+            <T
+              en="Art direction that ties a set of images into one atmosphere."
+              ja="複数のイメージをひとつの空気にまとめるアートディレクション。"
+            />
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="ab__sec">
+      <h2 class="u-sect ab__h2">Information</h2>
+      <div class="ab__rows">
+        <div class="ab__r">
+          <span class="u-data ab__n">01</span>
+          <h3 class="ab__t">Location</h3>
+          <p class="ab__d">Tokyo, Japan.</p>
+        </div>
+        <div class="ab__r">
+          <span class="u-data ab__n">02</span>
+          <h3 class="ab__t">Inquiries</h3>
+          <p class="ab__d"><a href="mailto:hello@pyrenees.studio">hello@pyrenees.studio</a></p>
+        </div>
+        <div class="ab__r">
+          <span class="u-data ab__n">03</span>
+          <h3 class="ab__t">Elsewhere</h3>
+          <p class="ab__d"><T en="Instagram and Vimeo to follow." ja="Instagram、Vimeo は準備中。" /></p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="foot u-micro">
+      <span>2026 Pyrenees Pictures Studio, Tokyo</span>
+      <span>Live action to full CG</span>
+    </footer>
+  </main>
+</Base>
+
+<style is:global>
+  /* About runs on its own ground: a saturated blue with solid black type.
+     Set on html as well as body so the overscroll gutter matches, and keyed
+     off the path attribute Base.astro already writes, so nothing else on the
+     site is affected. */
+  /* ⚠️ prefix match, not equality: the dev server serves this page at
+     /about while the static build writes /about/ into data-path, so an
+     exact selector matched in dev and silently missed in production. */
+  html:has(body[data-path^='/about']) { background: #344da2; }
+  body[data-path^='/about'] { background: #344da2; color: #000; }
+  /* the hairlines are ink at low alpha — they still read as rules on blue */
+  body[data-path^='/about'] .grain { opacity: 0.04; }
+</style>
+
+<style>
+  .page-wrapper { padding-inline: var(--pad-inline); }
+  .ab { min-height: 100dvh; display: flex; flex-direction: column; }
+
+  /* ——— the statement fills the first screen ——— */
+  .ab__hero {
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    padding: 96px 0 40px;
+  }
+  /* larger than the shared page scale: this block is meant to take the
+     whole viewport, so it is sized to the sentence rather than the token */
+  /* Set in English in both languages, so the Latin metrics always apply.
+     Smaller than a display line would normally be — the sentence is long
+     enough that the size is set by wanting it to fill the screen, not by
+     wanting each word to be big. */
+  .ab__st { font-size: clamp(24px, 5.4vw, 82px); line-height: 1.0; }
+
+  /* ——— band ——— */
+  .ab__band { border-top: 1px solid var(--line-soft); padding-top: 18px; }
+  .ab__row { display: flex; justify-content: space-between; align-items: baseline; }
+  .ab__row--foot { margin-top: clamp(40px, 7vh, 90px); padding-bottom: 18px; }
+  .ab__who, .ab__sign { font-size: 13px; line-height: 1.45; }
+  .ab__sign { text-align: right; }
+
+  .ab__cols {
+    margin-top: clamp(40px, 7vh, 90px);
+    margin-left: auto;
+    width: min(100%, 62%);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(20px, 2.4vw, 40px);
+  }
+  .ab__cols p { font-size: 12.5px; line-height: 1.62; text-wrap: pretty; }
+
+  /* ——— numbered rows: the section head is now a real heading size ——— */
+  .ab__sec {
+    margin-top: clamp(56px, 9vh, 110px);
+    padding-top: 18px;
+    border-top: 1px solid var(--line-soft);
+  }
+  .ab__h2 { margin-bottom: clamp(20px, 3.5vh, 44px); }
+  .ab__r {
+    display: grid;
+    grid-template-columns: 56px minmax(150px, 240px) 1fr;
+    align-items: baseline;
+    gap: 20px;
+    padding: 16px 0;
+    border-top: 1px solid var(--line-soft);
+  }
+  .ab__r:first-child { border-top: none; }
+  .ab__n { opacity: 0.7; }
+  .ab__t { font-size: 14px; font-weight: 400; }
+  .ab__d { line-height: 1.6; font-size: 13px; }
+  .ab__d a { border-bottom: 1px solid var(--line); }
+  .ab__d a:hover { opacity: 1; }
+
+  .foot {
+    display: flex;
+    justify-content: space-between;
+    margin-top: auto;
+    padding: 26px 0 22px;
+    border-top: 1px solid var(--line-soft);
+  }
+
+  @media (max-width: 760px) {
+    .ab__hero { min-height: 68vh; }
+    .ab__cols { width: 100%; grid-template-columns: 1fr; }
+    .ab__r { grid-template-columns: 40px 1fr; }
+    .ab__d { grid-column: 2; }
+  }
+</style>

@@ -1,0 +1,12 @@
+---
+// Bilingual text node. Both languages ship in the HTML and CSS picks one
+// (see base.css :root[data-lang]) — so switching costs no request, causes
+// no flash of the wrong language, survives view transitions with no JS,
+// and never touches the URL (the office pattern: no /ja prefix, every link
+// keeps working in either language).
+interface Props { en: string; ja?: string }
+const { en, ja } = Astro.props;
+---
+{ja
+  ? <span class="t"><span class="t-en">{en}</span><span class="t-ja">{ja}</span></span>
+  : <span class="t">{en}</span>}

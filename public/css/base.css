@@ -1,0 +1,186 @@
+/* ————————————————————————————————————————————
+   PYRENEES PICTURES STUDIO — design tokens + base
+   White paper / monochrome ink, grotesque identity,
+   monospaced data voice for catalogue metadata.
+   All brand values live here (Dev/CLAUDE.md rule) —
+   components reference vars only.
+   ———————————————————————————————————————————— */
+
+/* Unica 77 LL (Lineto) — Regular only (one weight sitewide), self-hosted,
+   filename unchanged per the web-trial license. TRIAL LICENSE: internal/dev
+   use only — not cleared for the public production domain, buy before launch.
+
+   ⚠️ TRIAL GLYPH SET IS SEVERELY RESTRICTED (verified via fontTools cmap
+   dump, 2026-07-29): the ONLY printable characters that survive intact are
+   space , - . / 0-9 A-Z a-z. Every accented Latin letter silently drops
+   its diacritic (é -> e, no visible error), and every other symbol —
+   including & @ ! ? ( ) " ' : ; © ® — — is replaced with a generic bullet
+   glyph. unicode-range below scopes the face to ONLY the verified-safe
+   set so anything else (®, —, @, &, é, …) automatically falls through to
+   the fallback stack instead of silently rendering wrong. This means
+   punctuation-heavy lines mix two typefaces until a full license is
+   bought — remove this unicode-range once the production font ships. */
+@font-face {
+  font-family: 'Unica77 LL';
+  src: url('/fonts/Unica77LLTrialWeb-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0020, U+002C, U+002D, U+002E, U+002F, U+0030-0039, U+0041-005A, U+0061-007A;
+}
+
+:root {
+  /* color — pure white paper, solid ink text everywhere (2026-07-29:
+     grey/muted tiers retired — --color-grey/-d alias to ink so every
+     component that references them for secondary text now reads black). */
+  --color-paper: #ffffff;
+  --color-ink: #0d0d0c;
+  --color-grey: var(--color-ink);
+  --color-grey-d: var(--color-ink);
+  --line: rgba(13, 13, 12, 0.14);
+  --line-soft: rgba(13, 13, 12, 0.07);
+  --ink-04: rgba(13, 13, 12, 0.04); /* image placeholder wash */
+
+  /* typography — one grotesque family, one tracking value (-0.01em) for
+     everything, Capital case (no uppercase transforms). Regular (400) only,
+     sitewide — no medium/bold cut in use. */
+  --font-display: 'Unica77 LL', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  /* Japanese — Tazugane Gothic via FontPlus, appended to the Latin stack so
+     Latin glyphs still resolve to Unica inside a mixed JP line. */
+  --font-jp: 'Unica77 LL', 'FOT-TsukuARdGothic Std', 'Tazugane Gothic',
+    'Hiragino Sans', 'Noto Sans JP', sans-serif;
+  --ls-global: -0.01em;
+  --fs-micro: 12px;
+  --fs-data: 11px;
+
+  /* display scale — titles must read as titles. The whole site is one
+     weight, so SIZE is the only contrast tool available; these steps are
+     deliberately far apart from --fs-micro so the pairing reads. */
+  --fs-page: clamp(44px, 8vw, 132px);   /* page title (About, Contact, work) */
+  --fs-sect: clamp(26px, 3.4vw, 46px);  /* section heading */
+
+  /* spacing / layout */
+  --pad-inline: clamp(18px, 3.4vw, 48px);
+
+
+  /* z-index — whole stack defined here, no magic numbers in components */
+  --z-stage: 10;
+  --z-caption: 70;
+  --z-header: 100;
+  --z-curtain: 300;
+  --z-grain: 400;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { background: var(--color-paper); }
+/* overflow-x: clip, never hidden (keeps position:sticky alive) */
+html, body { overflow-x: clip; }
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: 14px;
+  line-height: 1.5;
+  letter-spacing: var(--ls-global);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a { color: inherit; text-decoration: none; }
+button { background: none; border: 0; color: inherit; font: inherit; cursor: pointer; }
+img { display: block; max-width: 100%; -webkit-user-drag: none; }
+::selection { background: var(--color-ink); color: var(--color-paper); }
+
+/* keyboard users get a visible focus ring; pointer users don't */
+:focus-visible {
+  outline: 1.5px solid var(--color-ink);
+  outline-offset: 3px;
+}
+:focus:not(:focus-visible) { outline: none; }
+
+/* accessibility: the whole choreography stands down for reduced motion —
+   the JS smoothers check the flag too (lenis lerp in app.js, the springs
+   in top.js) since per-frame transforms are out of this rule's reach */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* micro voice — same grotesque, Capital case, global tracking */
+.u-micro {
+  font-family: var(--font-display);
+  font-size: var(--fs-micro);
+  letter-spacing: var(--ls-global);
+  font-weight: 400;
+}
+
+/* data voice — catalogue metadata: numbers, codes, dimensions. Same
+   typeface as everything else (2026-08-14: the mono cut was retired);
+   it reads as data through size + tabular figures, not a second family. */
+.u-data {
+  font-family: var(--font-display);
+  font-size: var(--fs-data);
+  letter-spacing: 0.02em;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+
+/* page title — the large half of the site's one type contrast */
+.u-page {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--fs-page);
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+}
+.u-sect {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: var(--fs-sect);
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+}
+
+/* Japanese: swap the family only — the Latin face still wins per-glyph */
+:root[data-lang='ja'] body { font-family: var(--font-jp); }
+:root[data-lang='ja'] .u-page { letter-spacing: -0.01em; line-height: 1.06; }
+:root[data-lang='ja'] .u-sect { letter-spacing: 0; line-height: 1.35; }
+/* JP text sets tighter than the Latin display sizes want */
+:root[data-lang='ja'] .u-page { font-size: clamp(30px, 5.4vw, 84px); }
+
+/* display voice — the identity */
+.u-display {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: var(--ls-global);
+  line-height: 0.9;
+}
+
+/* ——— bilingual text (see components/T.astro) ———————————————
+   Both languages are in the DOM; CSS reveals one. No JS, no flash, no
+   URL change — links stay identical in either language. */
+.t-ja { display: none; }
+:root[data-lang='ja'] .t-en { display: none; }
+:root[data-lang='ja'] .t-ja { display: inline; }
+
+/* language switch — a pair of hairline labels, current one inked */
+.langsw { display: inline-flex; gap: 5px; align-items: baseline; }
+.langsw button { opacity: 0.4; transition: opacity 0.2s ease; }
+.langsw button:hover { opacity: 0.75; }
+.langsw button[aria-pressed='true'] { opacity: 1; }
+
+/* paper grain — one shared texture across every page */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-grain);
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+}

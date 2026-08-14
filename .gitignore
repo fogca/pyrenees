@@ -1,0 +1,34 @@
+# build / deps
+node_modules
+dist
+.astro
+.wrangler
+.vercel
+.netlify
+
+# OS
+.DS_Store
+Thumbs.db
+
+# env / secrets
+.env
+.env.*
+!.env.example
+
+# ——— NOT PUBLISHABLE ————————————————————————————
+# github.com/fogca/pyrenees is a PUBLIC repo. Everything below is licensed to
+# the studio for internal work only, so committing it would be redistribution.
+# Keep these out until the licences are settled; they stay on disk and in the
+# Cloudflare deploy, they are simply not in git.
+
+# Unica 77 LL — Lineto WEB TRIAL. Internal/dev evaluation only, explicitly not
+# cleared for a public production domain. Buy the licence, then remove this
+# line and commit the production cut.
+public/fonts/*.woff2
+
+# Stand-in imagery: Toyota / Lexus product renders and MILES158 brand boards,
+# borrowed as placeholders until the studio's own pictures land in CMS/*/images/.
+# Neither is the studio's to republish.
+scripts/source-images/
+public/images/archive/
+public/og.png

@@ -1,0 +1,159 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteMenu from '../components/SiteMenu.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+const {
+  title = 'Pyrenees Pictures Studio — An Image Studio, Tokyo',
+  description = 'An image studio in Tokyo. Live action to full CG, whatever the picture needs.',
+} = Astro.props;
+const path = Astro.url.pathname;
+const canonical = new URL(path, Astro.site);
+const ogImage = new URL('/og.png', Astro.site);
+---
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="manifest" href="/manifest.webmanifest" />
+  <meta name="theme-color" content="#ffffff" />
+
+  <!-- Unica 77 LL (Regular, one weight sitewide) — preload so the identity
+       paints in the real face on first load rather than a fallback swap -->
+  <link rel="preload" href="/fonts/Unica77LLTrialWeb-Regular.woff2" as="font" type="font/woff2" crossorigin />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Pyrenees Pictures Studio" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={ogImage} />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={ogImage} />
+
+  <script type="application/ld+json" set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Pyrenees Pictures Studio',
+    description: 'An image studio in Tokyo. Live action to full CG, whatever the picture needs.',
+    url: Astro.site?.toString(),
+    email: 'hello@pyrenees.studio',
+    address: { '@type': 'PostalAddress', addressLocality: 'Tokyo', addressCountry: 'JP' },
+  })} />
+
+  <!-- Japanese: Tazugane Gothic via FontPlus. Deferred so it never blocks
+       the first paint; the loader re-scans after each view transition (see
+       app.js). ⚠️ SETUP: the delivery domain must be registered in the
+       FontPlus my-page (production host AND localhost) or the request is
+       refused and JP falls back to Hiragino. Replace the key below with the
+       project key once the FontPlus contract is issued. -->
+  <script is:inline defer src="https://webfont.fontplus.jp/accessor/script/fontplus.js?PYRENEES_FONTPLUS_KEY&aa=1&ab=2"></script>
+
+  <link rel="stylesheet" href="/css/base.css?v=20260814d" />
+  <!-- language before first paint: the switch is CSS-driven (see T.astro),
+       so setting the attribute here means the right language is painted
+       once, with no flash of the other one -->
+  <script is:inline>
+    (() => {
+      let l = null;
+      try { l = localStorage.getItem('pps-lang'); } catch {}
+      if (l !== 'ja' && l !== 'en') l = (navigator.language || '').startsWith('ja') ? 'ja' : 'en';
+      document.documentElement.dataset.lang = l;
+      document.documentElement.lang = l;
+    })();
+  </script>
+  <ClientRouter />
+</head>
+<body data-path={path}>
+  <div class="grain"></div>
+
+  <!-- paper curtain for page transitions (driven by app.js) -->
+  <div class="curtain" id="curtain" transition:persist="curtain" aria-hidden="true">
+    <span class="curtain__label u-micro" id="curtainLabel"></span>
+  </div>
+
+  <SiteHeader path={path} />
+  <SiteMenu />
+
+  <slot />
+
+  <script>
+    import '../scripts/app.js';
+  </script>
+</body>
+</html>
+
+<style is:global>
+  .curtain {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-curtain);
+    background: var(--color-ink);
+    display: flex;
+    align-items: flex-end;
+    padding: 22px var(--pad-inline);
+    /* position is driven EXCLUSIVELY by gsap yPercent (set on first page-load).
+       A CSS translateY base here would compose additively with gsap's yPercent
+       — that double transform meant the curtain never actually reached the
+       viewport during navigation (it slid from 202% to 101% = still hidden),
+       so swaps happened raw, then the curtain rose over the NEW page. */
+    visibility: hidden; /* until app.js takes ownership — avoids first-paint flash */
+    pointer-events: none;
+    will-change: transform;
+  }
+  .curtain__label { color: var(--color-paper); opacity: 0.7; }
+
+  /* default view-transition crossfade stays subtle — the curtain (or the
+     tile morph) carries the drama */
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.25s;
+  }
+
+  /* tile -> detail shared-element morph (transition:name={`tile-${slug}`}):
+     the (root) rules above are more specific and keep winning for root, so
+     this wildcard only reaches the per-slug named groups. Slower than the
+     root crossfade so the image reads as gliding into place while the rest
+     of the chrome resolves quickly around it.
+
+     ⚠️ verified via recorded video (2026-07-30): the site's signature
+     ease (cubic-bezier(0.16,0.8,0.24,1), still used for the works-grid
+     hover) front-loads almost all of its travel into the first ~20% of
+     the duration — applied here it made
+     the box snap to its final size/position within ~150ms of a 680ms
+     animation, with the remaining time doing an imperceptible tail settle.
+     The whole point of this transition is watching the image glide, so the
+     GROUP (position/size) gets a symmetric ease-in-out that spreads visible
+     motion across the full duration instead. */
+  ::view-transition-group(*) {
+    animation-duration: 0.68s;
+    animation-timing-function: cubic-bezier(0.45, 0, 0.15, 1);
+  }
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-duration: 0.68s;
+    animation-timing-function: ease;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    ::view-transition-old(root),
+    ::view-transition-new(root),
+    ::view-transition-group(*),
+    ::view-transition-old(*),
+    ::view-transition-new(*) { animation: none; }
+  }
+</style>

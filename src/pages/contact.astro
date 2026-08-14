@@ -1,0 +1,365 @@
+---
+import Base from '../layouts/Base.astro';
+import T from '../components/T.astro';
+// Contact = one continuous instrument: rates, then the questions, then the
+// inquiry fields. FLAT pricing, confirmed by Takumi 2026-07-27:
+//   one cut 800 USD (any setting, modeling of one product included)
+//   additional cut in the same scene 400 USD
+// Grounded in market research: styled-scene mid band 300-900 per image,
+// interior mid ~800.
+// NOTE: prices are written as "800 USD" — the trial cut of Unica 77 has no
+// dollar sign, so a "$" would fall through to a fallback face mid-token.
+// Video is not offered for now (2026-08-14) — stills only.
+const RATES = { cut: 800, additionalCut: 400 };
+const MAIL = 'hello@pyrenees.studio';
+---
+<Base title="Contact — Pyrenees Pictures Studio">
+  <main class="page-wrapper contact">
+    <header class="contact__head">
+      <h1 class="u-page contact__title">Contact</h1>
+      <p class="contact__lede u-micro">
+        <T
+          en="Every cut is 800 USD. Any setting, modeling of one product included. No tiers. Complex builds are scoped together before anything starts."
+          ja="1カットは800 USD。設定は問わず、product1点のモデリングを含みます。段階料金はありません。規模の大きい制作は着手前に一緒に設計します。"
+        />
+      </p>
+    </header>
+
+    <!-- ——— published rates ——— -->
+    <section class="rates" aria-label="Rates">
+      <div class="rates__row">
+        <span class="rates__label u-micro">One cut</span>
+        <span class="rates__price u-data">800 USD</span>
+        <span class="rates__note u-micro">
+          <T en="Any setting. Modeling of one product included." ja="設定は問いません。product1点のモデリングを含みます。" />
+        </span>
+      </div>
+      <div class="rates__row">
+        <span class="rates__label u-micro">Additional cut, same scene</span>
+        <span class="rates__price u-data">400 USD</span>
+        <span class="rates__note u-micro">
+          <T en="Angles, variants, crops of a scene we built." ja="組んだシーンのアングル、バリエーション、トリミング。" />
+        </span>
+      </div>
+    </section>
+
+    <!-- ——— the same block IS the inquiry form: questions and contact
+         fields run as one numbered sequence ——— -->
+    <form class="est" id="estimator" data-rates={JSON.stringify(RATES)} data-mail={MAIL} novalidate>
+
+      <div class="est__q" data-q="subject">
+        <span class="est__no u-data">01</span>
+        <p class="est__label u-micro" id="q-subject">Subject</p>
+        <div class="est__opts" role="group" aria-labelledby="q-subject">
+          <button type="button" data-v="Product" class="is-active" aria-pressed="true">Product</button>
+          <button type="button" data-v="Food and drink" aria-pressed="false">Food and drink</button>
+          <button type="button" data-v="Interior" aria-pressed="false">Interior</button>
+          <button type="button" data-v="Person" aria-pressed="false">Person</button>
+        </div>
+      </div>
+
+      <div class="est__q" data-q="cuts">
+        <span class="est__no u-data">02</span>
+        <p class="est__label u-micro" id="q-cuts">Cuts</p>
+        <div class="est__opts" role="group" aria-labelledby="q-cuts">
+          <button type="button" data-v="1" class="is-active" aria-pressed="true">1</button>
+          <button type="button" data-v="2" aria-pressed="false">2</button>
+          <button type="button" data-v="3" aria-pressed="false">3</button>
+          <button type="button" data-v="5" aria-pressed="false">5</button>
+        </div>
+      </div>
+
+
+      <div class="est__q est__q--check">
+        <span class="est__no u-data">03</span>
+        <p class="est__label u-micro">Ongoing production</p>
+        <div class="est__opts">
+          <label class="est__check" for="ongoing">
+            <input type="checkbox" id="ongoing" name="ongoing" />
+            <span class="est__checkText u-micro">
+              <T
+                en="Continuous, month to month. Scope is set per engagement, so the figure below reads ASK."
+                ja="月単位の継続制作。スコープは契約ごとに決めるため、下の金額はASKになります。"
+              />
+            </span>
+          </label>
+        </div>
+      </div>
+
+      <div class="est__q">
+        <span class="est__no u-data">04</span>
+        <label class="est__label u-micro" for="name">Name</label>
+        <div class="est__opts">
+          <input class="est__input" type="text" id="name" name="name" autocomplete="name" required />
+        </div>
+      </div>
+
+      <div class="est__q">
+        <span class="est__no u-data">05</span>
+        <label class="est__label u-micro" for="email">Email</label>
+        <div class="est__opts">
+          <input class="est__input" type="email" id="email" name="email" autocomplete="email" required />
+        </div>
+      </div>
+
+      <div class="est__q est__q--area">
+        <span class="est__no u-data">06</span>
+        <label class="est__label u-micro" for="brief">Project</label>
+        <div class="est__opts">
+          <textarea class="est__input est__area" id="brief" name="brief" rows="4"></textarea>
+        </div>
+      </div>
+
+      <div class="est__result">
+        <span class="est__no u-data">07</span>
+        <p class="est__label u-micro">Estimate</p>
+        <div class="est__out" aria-live="polite">
+          <p class="est__figure u-data" id="estFigure">800 USD</p>
+          <p class="est__note u-micro" id="estNote"></p>
+        </div>
+        <button class="est__send u-micro" type="submit">Send this inquiry</button>
+      </div>
+    </form>
+
+    <section class="contact__info">
+      <div class="contact__irow">
+        <span class="u-micro contact__ilabel">General inquiries</span>
+        <a class="u-data" href={`mailto:${MAIL}`}>{MAIL}</a>
+      </div>
+      <div class="contact__irow">
+        <span class="u-micro contact__ilabel">Elsewhere</span>
+        <span class="u-micro"><T en="Instagram, Vimeo. Profiles to follow." ja="Instagram、Vimeo。準備中です。" /></span>
+      </div>
+    </section>
+
+    <footer class="foot u-micro">
+      <span>2026 Pyrenees Pictures Studio, Tokyo</span>
+      <span>Tokyo</span>
+    </footer>
+  </main>
+</Base>
+
+<script>
+  // Re-entrant across ClientRouter swaps: module loads once, listener runs on
+  // every page-load and bails unless the estimator exists on this page.
+  function initEstimator() {
+    const root = document.getElementById('estimator');
+    if (!root || root.dataset.init) return;
+    root.dataset.init = '1';
+    const RATES = JSON.parse(root.dataset.rates);
+    const MAIL = root.dataset.mail;
+
+    const state = { subject: 'Product', cuts: '1' };
+    const figure = document.getElementById('estFigure');
+    const note = document.getElementById('estNote');
+    const ongoing = document.getElementById('ongoing');
+    // "800 USD", never a dollar sign: the trial font has no "$" glyph.
+    const money = (n) => n.toLocaleString('en-US') + ' USD';
+    const isJa = () => document.documentElement.dataset.lang === 'ja';
+
+    // Localised option labels for the summary the studio receives.
+    const JA = {
+      Product: 'プロダクト', 'Food and drink': '食品と飲料',
+      Interior: '空間', Person: '人物',
+    };
+    const label = (v) => (isJa() && JA[v] ? JA[v] : v);
+
+    function totals() {
+      const n = parseInt(state.cuts, 10);
+
+      const stills = RATES.cut + (n - 1) * RATES.additionalCut;
+      return { n, stills, total: stills };
+    }
+
+    function render() {
+      const { n } = totals();
+      const parts = isJa()
+        ? [`${n}カット`]
+        : [`${n} cut${n > 1 ? 's' : ''}`];
+      if (ongoing.checked) {
+        // Retainer work is scoped per engagement, so no number is shown.
+        figure.textContent = 'ASK';
+        note.textContent = isJa()
+          ? '継続制作は契約ごとにスコープを決めます。ボリュームと頻度をお知らせください。'
+          : 'Ongoing work is scoped per engagement. Tell us the volume and the cadence.';
+      } else {
+        figure.textContent = money(totals().total);
+        note.textContent = isJa()
+          ? `${parts.join('、')}。定額です。`
+          : `${parts.join(', ')}. Flat, no estimates needed.`;
+      }
+    }
+
+    root.addEventListener('click', (e) => {
+      const btn = e.target.closest('button[data-v]');
+      if (!btn) return;
+      const q = btn.closest('.est__q').dataset.q;
+      state[q] = btn.dataset.v;
+      btn.parentElement.querySelectorAll('button[data-v]').forEach((b) => {
+        const on = b === btn;
+        b.classList.toggle('is-active', on);
+        b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      });
+      render();
+    });
+
+    ongoing.addEventListener('change', render);
+
+    // No backend: compose a readable mailto from the answers and navigate.
+    root.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const { n, stills, total } = totals();
+      const get = (id) => (document.getElementById(id).value || '').trim();
+      const ja = isJa();
+      const L = ja
+        ? { est: '概算', subj: '被写体', cuts: 'カット数', ongoing: '継続制作', total: '合計', name: 'お名前', email: 'メール', brief: 'プロジェクト',
+            yes: 'あり', no: 'なし', none: 'なし', sec: '秒', subject: '概算とお問い合わせ' }
+        : { est: 'Estimate', subj: 'Subject', cuts: 'Cuts', ongoing: 'Ongoing production', total: 'Total', name: 'Name', email: 'Email',
+            brief: 'Project', yes: 'yes', no: 'no', none: 'none', sec: 's',
+            subject: 'Estimate and inquiry' };
+      const lines = [
+        `${L.subj}: ${label(state.subject)}`,
+        `${L.cuts}: ${n} (${money(stills)})`,
+        `${L.ongoing}: ${ongoing.checked ? L.yes : L.no}`,
+        `${L.total}: ${ongoing.checked ? 'ASK' : money(total)}`,
+        '',
+        `${L.name}: ${get('name')}`,
+        `${L.email}: ${get('email')}`,
+        '',
+        `${L.brief}:`,
+        get('brief'),
+      ];
+      const subject = `${L.subject} — Pyrenees Pictures Studio`;
+      // Personal data travels in the mail body, never in a page query string.
+      location.href = `mailto:${MAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(lines.join('\n'))}`;
+    });
+
+    render();
+  }
+  document.addEventListener('astro:page-load', initEstimator);
+  initEstimator();
+</script>
+
+<style>
+  .page-wrapper { padding-inline: var(--pad-inline); }
+  .contact {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    padding-top: 96px;
+  }
+
+  .contact__head { padding-bottom: clamp(40px, 7vh, 80px); }
+  .contact__title { margin-bottom: clamp(28px, 5vh, 56px); }
+  .contact__lede { max-width: 46ch; line-height: 1.6; opacity: 0.56; }
+
+  .rates__row {
+    display: grid;
+    grid-template-columns: 220px 220px 1fr;
+    gap: 24px;
+    align-items: baseline;
+    padding: 20px 0;
+    border-top: 1px solid var(--line-soft);
+  }
+  .rates__label { color: var(--color-ink); }
+  /* prices live in the data voice — the whole token stays in one face */
+  .rates__price { font-size: clamp(24px, 3vw, 44px); letter-spacing: -0.02em; }
+  .rates__price i { font-style: normal; font-size: 0.45em; }
+  .rates__note { opacity: 0.56; }
+
+  /* one continuous numbered sequence: questions and contact fields share
+     the same row register so the block reads as a single instrument */
+  .est { margin-top: clamp(40px, 6vh, 70px); }
+  .est__q,
+  .est__result {
+    display: grid;
+    grid-template-columns: 40px 220px 1fr;
+    gap: 24px;
+    align-items: baseline;
+    padding: 18px 0;
+    border-top: 1px solid var(--line-soft);
+  }
+  .est__no { opacity: 0.56; }
+  .est__label { color: var(--color-ink); }
+  .est__opts { display: flex; gap: 26px; flex-wrap: wrap; align-items: baseline; }
+  .est__opts button {
+    color: var(--color-ink);
+    font-family: var(--font-display);
+    font-size: 15px;
+    letter-spacing: var(--ls-global);
+    background: none;
+    border: 0;
+    border-bottom: 1px solid transparent;
+    padding-bottom: 2px;
+    cursor: pointer;
+    opacity: 0.56;
+    transition: opacity 0.25s ease, border-color 0.25s ease;
+  }
+  .est__opts button:hover { opacity: 1; }
+  .est__opts button.is-active { opacity: 1; border-color: var(--color-ink); }
+
+  .est__check { display: flex; gap: 12px; align-items: baseline; cursor: pointer; }
+  .est__check input { accent-color: var(--color-ink); }
+  .est__checkText { max-width: 42ch; line-height: 1.6; }
+
+  .est__input {
+    width: min(100%, 420px);
+    font-family: var(--font-display);
+    font-size: 15px;
+    letter-spacing: var(--ls-global);
+    color: var(--color-ink);
+    background: none;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    padding: 4px 0;
+  }
+  .est__input:focus-visible { outline: none; border-color: var(--color-ink); }
+  .est__area { resize: vertical; line-height: 1.6; }
+
+  .est__result { border-top: 1px solid var(--line); padding: 26px 0; }
+  .est__figure { font-size: clamp(30px, 4vw, 60px); letter-spacing: -0.02em; }
+  .est__note { margin-top: 10px; max-width: 42ch; line-height: 1.6; opacity: 0.56; }
+  .est__send {
+    grid-column: 3;
+    margin-top: 22px;
+    width: fit-content;
+    font-family: var(--font-display);
+    letter-spacing: var(--ls-global);
+    color: var(--color-ink);
+    background: none;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 2px;
+    cursor: pointer;
+  }
+  .est__send:hover { border-color: var(--color-ink); }
+
+  .contact__info { margin-top: clamp(60px, 9vh, 100px); }
+  .contact__irow {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 24px;
+    padding: 14px 0;
+    border-top: 1px solid var(--line-soft);
+  }
+  .contact__ilabel { opacity: 0.56; }
+  .contact__irow a { border-bottom: 1px solid var(--line); }
+
+  .foot {
+    display: flex;
+    justify-content: space-between;
+    margin-top: auto;
+    padding: 26px 0 22px;
+    border-top: 1px solid var(--line-soft);
+    opacity: 0.56;
+  }
+
+  @media (max-width: 760px) {
+    .rates__row { grid-template-columns: 1fr; gap: 6px; }
+    .est__q, .est__result { grid-template-columns: 40px 1fr; gap: 8px 16px; }
+    .est__label { grid-column: 2; }
+    .est__opts, .est__out { grid-column: 2; }
+    .est__send { grid-column: 2; }
+    .contact__irow { grid-template-columns: 1fr; gap: 10px; }
+  }
+</style>

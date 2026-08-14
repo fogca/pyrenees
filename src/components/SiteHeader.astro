@@ -1,0 +1,43 @@
+---
+// Header: wordmark left, language pair and the menu trigger right. The
+// destinations themselves live in the menu overlay (the catalogue study) —
+// the header stays a single hairline of type on every page.
+// The wordmark is unaccented on purpose: every character of "Pyrenees
+// Pictures Studio" exists in the licensed cut, so nothing falls back.
+interface Props { path: string }
+const { path } = Astro.props;
+---
+<header class="hd">
+  <a class="hd__logo u-micro" href="/">Pyrenees Pictures Studio</a>
+
+  <div class="hd__right u-micro">
+    <div class="langsw" role="group" aria-label="Language">
+      <button type="button" data-lang="en" aria-pressed="true">EN</button>
+      <span aria-hidden="true">/</span>
+      <button type="button" data-lang="ja" aria-pressed="false">JA</button>
+    </div>
+    <button class="hd__menu" id="menuBtn" type="button" aria-expanded="false" aria-controls="menu">
+      Menu
+    </button>
+  </div>
+</header>
+
+<style>
+  .hd {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: var(--z-header);
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 18px var(--pad-inline);
+    pointer-events: none;
+  }
+  .hd > * { pointer-events: auto; }
+  .hd__logo { letter-spacing: var(--ls-global); }
+  .hd__right { display: flex; align-items: baseline; gap: clamp(16px, 2.4vw, 34px); }
+  .hd__menu:hover,
+  .hd__logo:hover { text-decoration: underline; text-underline-offset: 4px; }
+  /* the menu paints over the header, so the trigger inverts while open */
+  :global(html:has(.mn.is-open)) .hd__menu { opacity: 0.4; }
+</style>

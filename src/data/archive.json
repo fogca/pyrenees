@@ -1,0 +1,290 @@
+[
+  {
+    "no": "01",
+    "slug": "miles158",
+    "title": "MILES158",
+    "category": null,
+    "monthName": null,
+    "year": 2026,
+    "aspect": 1.5066,
+    "image": "/images/archive/scene-coast.webp",
+    "width": 1600,
+    "height": 1062,
+    "plate": "/images/archive/scene-coast-plate.webp",
+    "plateW": 760,
+    "plateH": 504,
+    "gallery": [
+      {
+        "src": "/images/archive/scene-mountain.webp",
+        "w": 1600,
+        "h": 1073,
+        "aspect": 1.4911
+      },
+      {
+        "src": "/images/archive/01-logotype-primary.webp",
+        "w": 1600,
+        "h": 900,
+        "aspect": 1.7778
+      },
+      {
+        "src": "/images/archive/lc500.webp",
+        "w": 1600,
+        "h": 1896,
+        "aspect": 0.8439
+      }
+    ],
+    "body": null,
+    "credits": [
+      [
+        "Direction",
+        "Pyrenees Pictures Studio"
+      ],
+      [
+        "Year",
+        "2026"
+      ]
+    ],
+    "code": "PP01",
+    "placeholderImages": true
+  },
+  {
+    "no": "02",
+    "slug": "jds",
+    "title": "Japanese Dark Spirits",
+    "category": null,
+    "monthName": null,
+    "year": 2026,
+    "aspect": 1.5066,
+    "image": "/images/archive/scene-machiya.webp",
+    "width": 1600,
+    "height": 1062,
+    "plate": "/images/archive/scene-machiya-plate.webp",
+    "plateW": 760,
+    "plateH": 504,
+    "gallery": [
+      {
+        "src": "/images/archive/tagline.webp",
+        "w": 1600,
+        "h": 900,
+        "aspect": 1.7778
+      },
+      {
+        "src": "/images/archive/10-type-in-use.webp",
+        "w": 1600,
+        "h": 900,
+        "aspect": 1.7778
+      },
+      {
+        "src": "/images/archive/scene-mountain.webp",
+        "w": 1600,
+        "h": 1073,
+        "aspect": 1.4911
+      }
+    ],
+    "body": null,
+    "credits": [
+      [
+        "Direction",
+        "Pyrenees Pictures Studio"
+      ],
+      [
+        "Year",
+        "2026"
+      ]
+    ],
+    "code": "PP02",
+    "placeholderImages": true
+  },
+  {
+    "no": "03",
+    "slug": "ondo",
+    "title": "Ondo",
+    "category": null,
+    "monthName": null,
+    "year": 2026,
+    "aspect": 1.7778,
+    "image": "/images/archive/symbol.webp",
+    "width": 1600,
+    "height": 900,
+    "plate": "/images/archive/symbol-plate.webp",
+    "plateW": 760,
+    "plateH": 428,
+    "gallery": [
+      {
+        "src": "/images/archive/01-logotype-primary.webp",
+        "w": 1600,
+        "h": 900,
+        "aspect": 1.7778
+      },
+      {
+        "src": "/images/archive/scene-coast.webp",
+        "w": 1600,
+        "h": 1062,
+        "aspect": 1.5066
+      },
+      {
+        "src": "/images/archive/tagline.webp",
+        "w": 1600,
+        "h": 900,
+        "aspect": 1.7778
+      }
+    ],
+    "body": null,
+    "credits": [
+      [
+        "Direction",
+        "Pyrenees Pictures Studio"
+      ],
+      [
+        "Year",
+        "2026"
+      ]
+    ],
+    "code": "PP03",
+    "placeholderImages": true
+  },
+  {
+    "no": "04",
+    "slug": "sann",
+    "title": "SANN",
+    "category": null,
+    "monthName": null,
+    "year": 2026,
+    "aspect": 0.6667,
+    "image": "/images/archive/scene-aerial.webp",
+    "width": 800,
+    "height": 1200,
+    "plate": "/images/archive/scene-aerial-plate.webp",
+    "plateW": 760,
+    "plateH": 1140,
+    "gallery": [
+      {
+        "src": "/images/archive/10-type-in-use.webp",
+        "w": 1600,
+        "h": 900,
+        "aspect": 1.7778
+      },
+      {
+        "src": "/images/archive/scene-machiya.webp",
+        "w": 1600,
+        "h": 1062,
+        "aspect": 1.5066
+      },
+      {
+        "src": "/images/archive/01-logotype-primary.webp",
+        "w": 1600,
+        "h": 900,
+        "aspect": 1.7778
+      }
+    ],
+    "body": null,
+    "credits": [
+      [
+        "Direction",
+        "Pyrenees Pictures Studio"
+      ],
+      [
+        "Year",
+        "2026"
+      ]
+    ],
+    "code": "PP04",
+    "placeholderImages": true
+  },
+  {
+    "no": "05",
+    "slug": "naun",
+    "title": "NAUN",
+    "category": null,
+    "monthName": null,
+    "year": 2026,
+    "aspect": 0.8479,
+    "image": "/images/archive/lm500.webp",
+    "width": 1600,
+    "height": 1887,
+    "plate": "/images/archive/lm500-plate.webp",
+    "plateW": 760,
+    "plateH": 896,
+    "gallery": [
+      {
+        "src": "/images/archive/scene-coast.webp",
+        "w": 1600,
+        "h": 1062,
+        "aspect": 1.5066
+      },
+      {
+        "src": "/images/archive/symbol.webp",
+        "w": 1600,
+        "h": 900,
+        "aspect": 1.7778
+      },
+      {
+        "src": "/images/archive/10-type-in-use.webp",
+        "w": 1600,
+        "h": 900,
+        "aspect": 1.7778
+      }
+    ],
+    "body": null,
+    "credits": [
+      [
+        "Direction",
+        "Pyrenees Pictures Studio"
+      ],
+      [
+        "Year",
+        "2026"
+      ]
+    ],
+    "code": "PP05",
+    "placeholderImages": true
+  },
+  {
+    "no": "06",
+    "slug": "unknown",
+    "title": "Unknown",
+    "category": null,
+    "monthName": null,
+    "year": 2026,
+    "aspect": 1.7778,
+    "image": "/images/archive/08-typography-latin.webp",
+    "width": 1600,
+    "height": 900,
+    "plate": "/images/archive/08-typography-latin-plate.webp",
+    "plateW": 760,
+    "plateH": 428,
+    "gallery": [
+      {
+        "src": "/images/archive/scene-machiya.webp",
+        "w": 1600,
+        "h": 1062,
+        "aspect": 1.5066
+      },
+      {
+        "src": "/images/archive/scene-aerial.webp",
+        "w": 800,
+        "h": 1200,
+        "aspect": 0.6667
+      },
+      {
+        "src": "/images/archive/scene-coast.webp",
+        "w": 1600,
+        "h": 1062,
+        "aspect": 1.5066
+      }
+    ],
+    "body": null,
+    "credits": [
+      [
+        "Direction",
+        "Pyrenees Pictures Studio"
+      ],
+      [
+        "Year",
+        "2026"
+      ]
+    ],
+    "code": "PP06",
+    "placeholderImages": true
+  }
+]

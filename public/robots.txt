@@ -1,0 +1,5 @@
+# Pre-launch: crawling blocked. At go-live flip to "Allow: /", add
+# "Sitemap: https://<final-domain>/sitemap-index.xml", and register the
+# property in Search Console (same runbook as one2026).
+User-agent: *
+Disallow: /

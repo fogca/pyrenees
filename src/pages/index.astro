@@ -1,0 +1,242 @@
+---
+import Base from '../layouts/Base.astro';
+import archive from '../data/archive.json';
+
+// Top — the strip. A contiguous vertical column of frames scrolling under a
+// fixed viewport, flanked by two columns of project names. Measured from the
+// reference at 1440x810: images fit a span-3 x 40vh box at their true aspect,
+// stacked edge to edge; the ragged silhouette is a product of the pictures
+// themselves, not of any effect applied to them. Nothing is cropped, scaled
+// off-aspect or warped — the pictures are the product.
+//
+// The front page carries a selection of twelve; the full catalogue is /works.
+// the strip loops, so it simply carries whatever the archive holds
+const feature = archive;
+---
+<Base>
+  <main class="tp" id="topStage">
+    <!-- the strip itself -->
+    <div class="tp__strip">
+      {feature.map((it, i) => (
+        <a
+          class="tp__card"
+          href={`/archive/${it.slug}/`}
+          data-aspect={it.aspect}
+          data-i={i}
+          data-no={it.no}
+          data-title={it.title}
+          aria-label={it.title}
+        >
+          <figure class="tp__fig" transition:name={`tile-${it.slug}`}>
+            <img
+              src={it.plate}
+              alt={it.title}
+              width={it.plateW}
+              height={it.plateH}
+              loading={i < 5 ? 'eager' : 'lazy'}
+              decoding="async"
+            />
+          </figure>
+          <span class="tp__crop" aria-hidden="true"></span>
+        </a>
+      ))}
+    </div>
+
+    <!-- Only the project on the centre line is named, on the left. The two
+         faces take turns: the outgoing one rolls up and away while the next
+         rolls in from below, one turn of a die. -->
+    <a class="tp__meta" id="tpMeta" href={`/archive/${feature[0].slug}/`}>
+      <span class="tp__flip">
+        <span class="tp__face" data-face="0"></span>
+        <span class="tp__face" data-face="1"></span>
+      </span>
+    </a>
+
+    <!-- the opening: one small square on the centre line, which fills, then
+         stretches into a row of thumbnails, which then grow into the strip -->
+    <span class="tp__dot" aria-hidden="true"></span>
+
+    <!-- pointer mark, inverted against whatever is under it -->
+    <div class="tp__cross" aria-hidden="true">
+      <span class="tp__crossBox"></span>
+      <span class="tp__crossLabel">Open project</span>
+    </div>
+
+    <a class="tp__contact u-micro" href="/contact">Contact</a>
+  </main>
+</Base>
+
+<style>
+  /* The top page owns the viewport: the strip scrolls, the document does not */
+  .tp {
+    position: fixed;
+    inset: 0;
+    overflow: clip;
+    touch-action: none;
+    cursor: default;
+  }
+
+  /* ——— strip ——— */
+  .tp__strip {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 0;
+    height: 100%;
+    z-index: var(--z-stage);
+  }
+  .tp__card {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    background: var(--ink-04);
+    will-change: transform;
+  }
+  /* The frame clips; the picture inside is taller than the frame and slides
+     against it as the frame crosses the viewport. Measured off the
+     reference: the content lags the frame by ~10% of its travel. */
+  .tp__fig {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: clip;
+  }
+  .tp__fig img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: block;
+    object-fit: cover;
+    will-change: transform;
+  }
+  .tp__crop { display: none; }
+  /* keyboard users get the same affordance the crosshair gives the mouse */
+  .tp__card:focus-visible { outline: 1.5px solid var(--color-ink); outline-offset: 4px; }
+
+  /* ——— the name of whatever is on the centre line ———
+     Left column of the same 12-column grid, sitting on the centre line so it
+     reads level with the picture it names. */
+  .tp__meta {
+    position: absolute;
+    top: 50%;
+    left: var(--pad-inline);
+    width: 34vw;
+    transform: translateY(-50%);
+    z-index: calc(var(--z-stage) + 1);
+    color: var(--color-ink);
+  }
+  .tp__flip {
+    display: block;
+    position: relative;
+    /* the box the faces turn inside; both are absolutely placed in it */
+    height: 1.5em;
+    font-size: clamp(14px, 1.5vw, 22px);
+    line-height: 1.5;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+    perspective: 620px;
+    transform-style: preserve-3d;
+  }
+  .tp__face {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    gap: 0.7em;
+    align-items: baseline;
+    white-space: nowrap;
+    backface-visibility: hidden;
+    transform-origin: 50% 50%;
+    /* resting face */
+    transform: translateY(0) rotateX(0deg);
+    opacity: 1;
+    transition: transform 0.62s cubic-bezier(0.45, 0, 0.15, 1),
+                opacity 0.62s cubic-bezier(0.45, 0, 0.15, 1);
+  }
+  /* leaving: rolls up and over the top edge */
+  .tp__face[data-state='out'] { transform: translateY(-100%) rotateX(90deg); opacity: 0; }
+  /* waiting below, ready to roll in — no transition, it is a reset */
+  .tp__face[data-state='below'] {
+    transform: translateY(100%) rotateX(-90deg);
+    opacity: 0;
+    transition: none;
+  }
+  .tp__faceNo { opacity: 0.55; }
+
+  /* ——— pointer mark ——— */
+  .tp__cross {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: calc(var(--z-header) - 1);
+    pointer-events: none;
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    mix-blend-mode: difference;
+    color: #fff;
+    will-change: transform;
+  }
+  .tp__crossBox { width: 8px; height: 8px; border: 1px solid #fff; display: block; }
+  .tp__crossLabel {
+    font-size: 11px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .tp__contact {
+    position: fixed;
+    right: var(--pad-inline);
+    bottom: 18px;
+    z-index: var(--z-header);
+    color: var(--color-ink);
+  }
+  .tp__contact:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+  /* ——— the opening ———
+     A single filled square waits on the centre line while the first frames
+     decode, then hands over to the thumbnails (which the script animates). */
+  .tp__dot {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 7px;
+    height: 7px;
+    margin: -3.5px 0 0 -3.5px;
+    background: var(--color-ink);
+    z-index: calc(var(--z-stage) + 2);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+  /* ⚠️ The opening's states are applied as INLINE styles by top.js, never as
+     classes. Astro's scoped-CSS pass drops rules for classes that never
+     appear in the template markup (verified: a `.tp.is-opening .tp__row`
+     rule was absent from every stylesheet while the element matched the
+     selector), so a class added at runtime by script finds no styling. */
+  .tp__card { opacity: 1; transition: opacity 0.3s ease; }
+  .tp__meta { transition: opacity 0.5s ease; }
+
+  /* ——— mobile: the strip takes the width, the name drops to the corner ——— */
+  @media (max-width: 767px) {
+    .tp__cross { display: none; }
+    .tp__meta {
+      top: auto;
+      bottom: 18px;
+      transform: none;
+      width: 58vw;
+    }
+    .tp__flip { font-size: 12px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tp__card { transition: none !important; }
+    /* a die turning is the whole idea, so reduced motion gets a plain cut */
+    .tp__face { transition: opacity 0.001s !important; transform: none !important; }
+    .tp__face[data-state='out'],
+    .tp__face[data-state='below'] { opacity: 0; transform: none !important; }
+  }
+</style>

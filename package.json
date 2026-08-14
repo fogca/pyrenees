@@ -1,0 +1,23 @@
+{
+  "name": "pyrenees-site",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "gen": "node scripts/gen-archive.mjs",
+    "deploy:test": "astro build && wrangler pages deploy dist --project-name=pyrenees-site --branch=test"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.3",
+    "astro": "^5.1.0",
+    "gsap": "^3.13.0",
+    "lenis": "^1.3.11",
+    "sharp": "^0.35.3"
+  },
+  "devDependencies": {
+    "wrangler": "^4.115.0"
+  }
+}

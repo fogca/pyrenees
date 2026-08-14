@@ -1,0 +1,192 @@
+---
+import Base from '../../layouts/Base.astro';
+import archive from '../../data/archive.json';
+// Work detail — the image first and clean (the hero box carries the true
+// aspect, so nothing is cropped or warped), then a ruled title band with
+// data-voice metadata columns, the body, the plates, and a credits table
+// (production-company reference register, 2026-08-14).
+
+export function getStaticPaths() {
+  return archive.map((entry) => ({ params: { slug: entry.slug }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const i = archive.findIndex((e) => e.slug === entry.slug);
+const prev = archive[(i - 1 + archive.length) % archive.length];
+const next = archive[(i + 1) % archive.length];
+---
+<Base title={`${entry.title} — Pyrenees Pictures Studio`} description={entry.body ?? `${entry.title}, ${entry.year} — Pyrenees Pictures Studio.`}>
+  <main class="page-wrapper detail">
+    <div class="detail__top u-data">
+      <a href="/works">&larr; Works</a>
+      <span>{entry.code}. — {entry.no}/{String(archive.length).padStart(2, '0')}</span>
+    </div>
+
+    <figure class="detail__hero" style={`--aspect:${entry.aspect}`} transition:name={`tile-${entry.slug}`}>
+      <img src={entry.image} alt={entry.title} width={entry.width} height={entry.height} />
+    </figure>
+
+    <!-- ——— title band: name left, metadata columns right ——— -->
+    <div class="detail__band">
+      <h1 class="detail__title u-page">{entry.title}</h1>
+      <div class="detail__meta">
+        {entry.category && (
+          <div class="detail__mcol">
+            <span class="u-data detail__mlabel">Category</span>
+            <span class="detail__mval">{entry.category}</span>
+          </div>
+        )}
+        <div class="detail__mcol">
+          <span class="u-data detail__mlabel">Date</span>
+          <span class="detail__mval">{entry.monthName ? `${entry.monthName} ${entry.year}` : entry.year}</span>
+        </div>
+        <div class="detail__mcol">
+          <span class="u-data detail__mlabel">Place</span>
+          <span class="detail__mval">Tokyo</span>
+        </div>
+      </div>
+    </div>
+
+    {entry.body && (
+      <div class="detail__bodyRow">
+        <span class="u-data">1</span>
+        <p class="detail__body">{entry.body}</p>
+      </div>
+    )}
+
+    <!-- plates — stacked clean, each at its own true aspect -->
+    <div class="detail__gallery">
+      {entry.gallery.map((g) => (
+        <figure class="detail__gfig" style={`--aspect:${g.aspect}`}>
+          <img src={g.src} alt={entry.title} width={g.w} height={g.h} loading="lazy" />
+        </figure>
+      ))}
+    </div>
+
+    <!-- credits — a data table -->
+    <dl class="detail__credits">
+      {entry.credits.map(([k, v]) => (
+        <div class="detail__crow">
+          <dt class="u-data">{k}</dt>
+          <dd>{v}</dd>
+        </div>
+      ))}
+    </dl>
+
+    <nav class="detail__nav u-micro">
+      <a href={`/archive/${prev.slug}/`}>&larr; {prev.title}</a>
+      <a href={`/archive/${next.slug}/`}>{next.title} &rarr;</a>
+    </nav>
+
+    <footer class="foot u-micro">
+      <span>2026 Pyrenees Pictures Studio, Tokyo</span>
+      <a class="u-data" href="mailto:hello@pyrenees.studio">hello@pyrenees.studio</a>
+    </footer>
+  </main>
+</Base>
+
+<style>
+  .page-wrapper { padding-inline: var(--pad-inline); }
+  .detail { padding-top: 96px; }
+  .detail__top {
+    display: flex;
+    justify-content: space-between;
+    color: var(--color-ink);
+    opacity: 0.7;
+    margin-bottom: 22px;
+  }
+  .detail__top a:hover { opacity: 1; }
+
+  .detail__hero {
+    aspect-ratio: var(--aspect);
+    max-height: 76vh;
+    margin-inline: auto;
+    overflow: clip;
+    background: var(--ink-04);
+  }
+  .detail__hero img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* ——— title band ——— */
+  .detail__band {
+    margin-top: clamp(44px, 7vh, 86px);
+    padding-top: 18px;
+    border-top: 1px solid var(--line-soft);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  /* the title is the large half of the page's only type contrast */
+  .detail__title { max-width: 14ch; }
+  .detail__meta { display: flex; gap: clamp(28px, 3.5vw, 60px); }
+  .detail__mcol { display: flex; flex-direction: column; gap: 6px; }
+  .detail__mlabel { opacity: 0.5; }
+  .detail__mval { font-size: 13px; }
+
+  .detail__bodyRow {
+    margin-top: clamp(40px, 7vh, 80px);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 32px;
+  }
+  .detail__body {
+    width: min(100%, 52ch);
+    font-size: 12.5px;
+    line-height: 1.55;
+  }
+
+  .detail__gallery {
+    margin-top: clamp(50px, 8vh, 100px);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(20px, 3vh, 40px);
+  }
+  .detail__gfig {
+    /* no explicit width — with one, max-height wins and the aspect box
+       collapses to a letterboxed crop; auto width honours both constraints */
+    aspect-ratio: var(--aspect);
+    max-height: 82vh;
+    margin-inline: auto;
+    overflow: clip;
+    background: var(--ink-04);
+  }
+  .detail__gfig img { width: 100%; height: 100%; object-fit: cover; }
+
+  .detail__credits { margin-top: clamp(50px, 8vh, 100px); }
+  .detail__crow {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 24px;
+    align-items: baseline;
+    padding: 12px 0;
+    border-top: 1px solid var(--line-soft);
+  }
+  .detail__crow dt { opacity: 0.55; }
+  .detail__crow dd { font-size: 13px; }
+
+  .detail__nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: clamp(40px, 6vh, 70px);
+    padding-top: 18px;
+    border-top: 1px solid var(--line-soft);
+  }
+  .detail__nav a:hover { color: var(--color-ink); }
+
+  .foot {
+    display: flex;
+    justify-content: space-between;
+    margin-top: clamp(50px, 8vh, 90px);
+    padding: 26px 0 22px;
+    border-top: 1px solid var(--line-soft);
+    color: var(--color-grey);
+  }
+  .foot a:hover { color: var(--color-ink); }
+
+  @media (max-width: 760px) {
+    .detail__crow { grid-template-columns: 1fr; gap: 4px; }
+    .detail__meta { gap: 22px; flex-wrap: wrap; }
+  }
+</style>
