@@ -80,7 +80,7 @@ const EAGER_COUNT = 8; // first screenful loads eagerly, the rest lazily
     padding: 0;
     list-style: none;
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     align-items: start;
     column-gap: clamp(12px, 1.4vw, 22px);
     row-gap: clamp(36px, 5vh, 68px);
@@ -129,12 +129,6 @@ const EAGER_COUNT = 8; // first screenful loads eagerly, the rest lazily
 
 
   /* 5 up (PC) -> 4 -> 3 (tablet) -> 2 (SP) */
-  @media (max-width: 1200px) {
-    .works__grid { grid-template-columns: repeat(4, 1fr); }
-  }
-  @media (max-width: 900px) {
-    .works__grid { grid-template-columns: repeat(3, 1fr); }
-  }
   @media (max-width: 620px) {
     .works { padding-top: 72px; }
     .works__grid {
