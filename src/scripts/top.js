@@ -154,11 +154,12 @@ export function initTop({ lenis, reduced }) {
     // width the strip itself occupies. The row is laid out AROUND `L.mid` —
     // the frame that comes to rest on the centre line — so the thumbnail
     // sitting at the middle of the screen is the one that stays there.
+    // The thumbnail is SQUARE and the space around it is the same on both
+    // axes, so the row and the line it turns into look like the same object
+    // seen two ways — nothing about the arrangement changes as it turns.
     L.thumb = 9;
-    // the thumbnail row runs ACROSS the strip: a horizontal row above a
-    // vertical strip on desktop, a vertical column beside a horizontal strip
-    // on a phone — the same move, mirrored
-    L.pitch = (L.mobile ? L.boxH : L.boxW) / N;
+    L.thumbGap = 6;
+    L.pitch = L.thumb + L.thumbGap;
     // The strip rests on the FIRST project, and scrolling forward walks the
     // running order from there. The loop means the ones before it are simply
     // the last few, so the opening row can still open symmetrically.
@@ -228,7 +229,9 @@ export function initTop({ lenis, reduced }) {
     for (let i = 0; i < N; i++) {
       curSize[i] = lerp(L.thumb, along(geo[i]), grow);
       curTop[i] = acc;
-      acc += curSize[i] + L.gap * grow;
+      // the spacing grows with the frames, from the square row's own gap to
+      // the strip's — so the two never disagree at any point in between
+      acc += curSize[i] + lerp(L.thumbGap, L.gap, grow);
     }
     return acc;
   }
@@ -288,7 +291,7 @@ export function initTop({ lenis, reduced }) {
         // swing into the strip STILL SMALL and already touching, and only
         // then does the whole strip grow outwards from the centre.
         w = lerp(L.thumb, g.w, grow);
-        h = lerp(L.thumb - 2, g.h, grow);
+        h = lerp(L.thumb, g.h, grow);
         // every thumbnail starts on the centre of the travel axis, and the
         // row opens from L.mid — so the frame in the middle of the row is
         // the one that ends up on the centre line, without travelling
