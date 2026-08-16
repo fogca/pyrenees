@@ -80,6 +80,13 @@ const feature = archive;
     /* matches the visualViewport height the script measures with; plain vh
        would be the toolbar-collapsed maximum and the two would disagree */
     height: 100dvh;
+    /* ⚠️ NOT decorative. iOS Safari fills its toolbar and safe areas from a
+       viewport-edge position:fixed element's background-color in preference
+       to the body's — and a transparent one gives it nothing to sample, so
+       it falls back to its own dark canvas. Every other page has no
+       full-viewport fixed element, which is why the black bands survived
+       here alone. Stating the paper colour is the fix. */
+    background: var(--color-paper);
     overflow: clip;
     touch-action: none;
     cursor: default;
