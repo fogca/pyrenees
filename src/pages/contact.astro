@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 import T from '../components/T.astro';
 // Contact = one continuous instrument: rates, then the questions, then the
 // inquiry fields. FLAT pricing, confirmed by Takumi 2026-07-27:
@@ -132,11 +133,9 @@ const MAIL = 'hello@pyrenees.studio';
       </div>
     </section>
 
-    <footer class="foot u-micro">
-      <span>2026 Pyrenees Pictures Studio, Tokyo</span>
-      <span>Tokyo</span>
-    </footer>
   </main>
+
+  <SiteFooter />
 </Base>
 
 <script>
@@ -345,14 +344,6 @@ const MAIL = 'hello@pyrenees.studio';
   .contact__ilabel { opacity: 0.56; }
   .contact__irow a { border-bottom: 1px solid var(--line); }
 
-  .foot {
-    display: flex;
-    justify-content: space-between;
-    margin-top: auto;
-    padding: 26px 0 22px;
-    border-top: 1px solid var(--line-soft);
-    opacity: 0.56;
-  }
 
   @media (max-width: 760px) {
     .rates__row { grid-template-columns: 1fr; gap: 6px; }

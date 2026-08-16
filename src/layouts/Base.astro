@@ -113,8 +113,19 @@ const ogImage = new URL('/og.png', Astro.site);
   .curtain {
     position: fixed;
     inset: 0;
+    /* 100lvh, not the implicit 100vh of inset:0 — this has to cover the
+       screen whatever the iOS toolbars are doing, and a box measured against
+       the dynamic viewport leaves a strip showing at one end mid-transition
+       (that is the "it slides in from above the tab bar" symptom). */
+    height: 100lvh;
     z-index: var(--z-curtain);
-    background: var(--color-ink);
+    /* ⚠️ transparent while idle ON PURPOSE. iOS Safari takes the fill for its
+       toolbar and safe areas from a viewport-edge position:fixed element's
+       background-color in preference to the body's — even when that element
+       is off-screen or fully transparent. A permanently black curtain is
+       what painted the black band and the black gradient behind the address
+       bar. app.js paints it for the length of a navigation and clears it. */
+    background: transparent;
     display: flex;
     align-items: flex-end;
     padding: 22px var(--pad-inline);

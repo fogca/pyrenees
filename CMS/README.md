@@ -42,3 +42,5 @@ needed per project. To add a project, make the folder and add a row to
 - `unknown/` — placeholder, project TBD
 - `sann/` — TBD
 - `naun/` — TBD
+- `slot07/` — 空き枠（プロジェクト未定。決まったらフォルダ名と `PROJECTS` の行を改名）
+- `slot08/` — 空き枠（同上）

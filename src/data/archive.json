@@ -286,5 +286,101 @@
     ],
     "code": "PP06",
     "placeholderImages": true
+  },
+  {
+    "no": "07",
+    "slug": "slot07",
+    "title": "Project 07",
+    "category": null,
+    "monthName": null,
+    "year": 2026,
+    "aspect": 0.799,
+    "image": "/images/archive/p09.webp",
+    "width": 640,
+    "height": 801,
+    "plate": "/images/archive/p09-plate.webp",
+    "plateW": 640,
+    "plateH": 801,
+    "gallery": [
+      {
+        "src": "/images/archive/p06.webp",
+        "w": 1000,
+        "h": 1243,
+        "aspect": 0.8045
+      },
+      {
+        "src": "/images/archive/p02.webp",
+        "w": 736,
+        "h": 737,
+        "aspect": 0.9986
+      },
+      {
+        "src": "/images/archive/p03.webp",
+        "w": 1200,
+        "h": 1500,
+        "aspect": 0.8
+      }
+    ],
+    "body": null,
+    "credits": [
+      [
+        "Direction",
+        "Pyrenees Pictures Studio"
+      ],
+      [
+        "Year",
+        "2026"
+      ]
+    ],
+    "code": "PP07",
+    "placeholderImages": true
+  },
+  {
+    "no": "08",
+    "slug": "slot08",
+    "title": "Project 08",
+    "category": null,
+    "monthName": null,
+    "year": 2026,
+    "aspect": 0.9986,
+    "image": "/images/archive/p02.webp",
+    "width": 736,
+    "height": 737,
+    "plate": "/images/archive/p02-plate.webp",
+    "plateW": 736,
+    "plateH": 737,
+    "gallery": [
+      {
+        "src": "/images/archive/p09.webp",
+        "w": 640,
+        "h": 801,
+        "aspect": 0.799
+      },
+      {
+        "src": "/images/archive/p05.webp",
+        "w": 1200,
+        "h": 1590,
+        "aspect": 0.7547
+      },
+      {
+        "src": "/images/archive/p06.webp",
+        "w": 1000,
+        "h": 1243,
+        "aspect": 0.8045
+      }
+    ],
+    "body": null,
+    "credits": [
+      [
+        "Direction",
+        "Pyrenees Pictures Studio"
+      ],
+      [
+        "Year",
+        "2026"
+      ]
+    ],
+    "code": "PP08",
+    "placeholderImages": true
   }
 ]

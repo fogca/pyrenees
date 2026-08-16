@@ -57,6 +57,8 @@ function curtainIn(label) {
   if (!el) return Promise.resolve();
   const labelEl = document.getElementById('curtainLabel');
   if (labelEl) labelEl.textContent = label;
+  // see the note in Base.astro: the ink goes on for the navigation only
+  el.style.backgroundColor = 'var(--color-ink)';
   curtainUp = true;
   return gsap.timeline()
     .set(el, { yPercent: 101 })
@@ -70,7 +72,10 @@ function curtainOut() {
   curtainUp = false;
   gsap.to(el, {
     yPercent: -101, duration: REDUCED ? 0 : 0.55, ease: 'power3.inOut', delay: REDUCED ? 0 : 0.06,
-    onComplete: () => gsap.set(el, { yPercent: 101 }),
+    onComplete: () => {
+      gsap.set(el, { yPercent: 101 });
+      el.style.backgroundColor = 'transparent';
+    },
   });
 }
 
@@ -118,9 +123,12 @@ function applyLang(lang) {
   document.documentElement.dataset.lang = lang;
   document.documentElement.lang = lang;
   try { localStorage.setItem('pps-lang', lang); } catch { /* private mode */ }
-  document.querySelectorAll('.langsw button[data-lang]').forEach((b) => {
-    b.setAttribute('aria-pressed', b.dataset.lang === lang ? 'true' : 'false');
-  });
+  const btn = document.getElementById('langBtn');
+  if (btn) {
+    // the label shows the CURRENT language, so the accessible name has to
+    // say what pressing it will do — otherwise it reads as a statement
+    btn.setAttribute('aria-label', lang === 'ja' ? 'Switch to English' : '日本語に切り替える');
+  }
   // FONTPLUS serves a subset of exactly the characters it saw; a language
   // swap reveals glyphs that were hidden at first scan, so ask for a rescan.
   whenFontplus((fp) => fp.reload(false));
@@ -151,8 +159,8 @@ document.addEventListener('astro:page-load', () => {
   ownCurtain();
 
   applyLang(document.documentElement.dataset.lang === 'ja' ? 'ja' : 'en');
-  document.querySelectorAll('.langsw button[data-lang]').forEach((b) => {
-    b.addEventListener('click', () => applyLang(b.dataset.lang));
+  document.getElementById('langBtn')?.addEventListener('click', () => {
+    applyLang(document.documentElement.dataset.lang === 'ja' ? 'en' : 'ja');
   });
   whenFontplus((fp) => fp.reload(!window.__fpLoaded));
   window.__fpLoaded = true;
@@ -169,3 +177,6 @@ document.addEventListener('astro:page-load', () => {
 });
 
 window.addEventListener('resize', () => top?.resize());
+// the iOS toolbars sliding in and out resize the visual viewport without
+// firing a window resize, and the strip is measured against that height
+window.visualViewport?.addEventListener('resize', () => top?.resize());

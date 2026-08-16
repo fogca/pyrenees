@@ -1,0 +1,97 @@
+---
+import T from './T.astro';
+// One footer for every page but the top (which is a fixed stage with no
+// bottom). It runs on the studio's blue with solid black type, the same
+// pairing About uses, so the page ends on the identity rather than trailing
+// off into the paper. Everything a visitor might still be looking for is
+// gathered here rather than spread across four thin per-page footers.
+const MAIL = 'hello@pyrenees.studio';
+---
+<footer class="ft">
+  <div class="ft__inner">
+    <p class="ft__mark">Pyrenees Pictures Studio</p>
+
+    <p class="ft__line">
+      <T
+        en="An image studio in Tokyo. Live action to full CG, whatever the picture needs."
+        ja="東京のイメージメークスタジオ。実写からフルCGまで、その画が必要とする手段で。"
+      />
+    </p>
+
+    <div class="ft__cols">
+      <div class="ft__col">
+        <p class="u-data ft__label">Index</p>
+        <a href="/works">Work</a>
+        <a href="/about">Studio</a>
+        <a href="/contact">Contact</a>
+      </div>
+
+      <div class="ft__col">
+        <p class="u-data ft__label">Contact</p>
+        <a href={`mailto:${MAIL}`}>{MAIL}</a>
+        <span>Tokyo, Japan</span>
+      </div>
+
+      <div class="ft__col">
+        <p class="u-data ft__label">Elsewhere</p>
+        <span><T en="Instagram, to follow" ja="Instagram 準備中" /></span>
+        <span><T en="Vimeo, to follow" ja="Vimeo 準備中" /></span>
+      </div>
+
+      <div class="ft__col">
+        <p class="u-data ft__label">Rates</p>
+        <span><T en="One cut, 800 USD" ja="1カット 800 USD" /></span>
+        <span><T en="Additional cut, 400 USD" ja="追加カット 400 USD" /></span>
+      </div>
+    </div>
+
+    <div class="ft__base u-data">
+      <span>2026 Pyrenees Pictures Studio</span>
+      <span>Tokyo</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .ft {
+    background: #344da2;
+    color: #000;
+    /* break out of the page wrapper's inline padding so the colour runs edge
+       to edge; 50% - 50vw is scrollbar-safe where a raw 100vw is not */
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-top: clamp(60px, 10vh, 130px);
+  }
+  .ft__inner { padding: clamp(40px, 7vh, 80px) var(--pad-inline) 26px; }
+
+  .ft__mark { font-size: clamp(22px, 3.4vw, 46px); letter-spacing: -0.025em; line-height: 1.05; }
+  .ft__line {
+    margin-top: 14px;
+    max-width: 46ch;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .ft__cols {
+    margin-top: clamp(40px, 7vh, 80px);
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+  }
+  .ft__col { display: flex; flex-direction: column; gap: 5px; font-size: 13px; }
+  .ft__label { opacity: 0.65; margin-bottom: 6px; }
+  .ft__col a { width: fit-content; border-bottom: 1px solid rgba(0, 0, 0, 0.28); }
+  .ft__col a:hover { border-bottom-color: #000; }
+
+  .ft__base {
+    margin-top: clamp(40px, 7vh, 80px);
+    padding-top: 16px;
+    border-top: 1px solid rgba(0, 0, 0, 0.22);
+    display: flex;
+    justify-content: space-between;
+  }
+
+  @media (max-width: 760px) {
+    .ft__cols { grid-template-columns: 1fr 1fr; gap: 28px 20px; }
+  }
+</style>

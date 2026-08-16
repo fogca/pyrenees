@@ -77,6 +77,9 @@ const feature = archive;
   .tp {
     position: fixed;
     inset: 0;
+    /* matches the visualViewport height the script measures with; plain vh
+       would be the toolbar-collapsed maximum and the two would disagree */
+    height: 100dvh;
     overflow: clip;
     touch-action: none;
     cursor: default;

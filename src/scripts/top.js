@@ -82,7 +82,10 @@ export function initTop({ lenis, reduced }) {
 
   function measure() {
     L.vw = window.innerWidth;
-    L.vh = window.innerHeight;
+    // visualViewport is the height actually on screen right now; innerHeight
+    // and CSS 100vh both report the toolbar-collapsed maximum on iOS, and
+    // mixing the two is what leaves layouts hanging behind the address bar
+    L.vh = window.visualViewport?.height ?? window.innerHeight;
     L.mobile = L.vw < 768;
 
     // The reference box is span-3 of a 12-column grid. Read the page padding
@@ -135,10 +138,15 @@ export function initTop({ lenis, reduced }) {
     }
 
     // The phone scrolls the document itself; the runway is what gives it
-    // something to scroll. One pixel of scroll is one pixel of travel.
+    // something to scroll. One pixel of scroll is one pixel of travel, and
+    // the strip position is the scroll position MODULO the loop — so the
+    // runway just has to be long enough that nobody reaches its end. Laying
+    // out many loops beats wrapping the scrollbar by hand: a scrollTo mid
+    // fling kills iOS momentum, and this way there is never a jump at all.
+    L.loops = 40;
+    L.base = Math.floor(L.loops / 2) * L.total; // room to scroll back, too
     if (run) {
-      L.travel = L.mobile ? Math.max(0, L.total - geo[N - 1].w - L.gap) : 0;
-      run.style.height = L.mobile ? `${(L.travel + L.vh).toFixed(0)}px` : '0px';
+      run.style.height = L.mobile ? `${(L.loops * L.total + L.vh).toFixed(0)}px` : '0px';
     }
 
     // The opening row: N thumbnails on the centre line, spanning the same
@@ -146,7 +154,10 @@ export function initTop({ lenis, reduced }) {
     // the frame that comes to rest on the centre line — so the thumbnail
     // sitting at the middle of the screen is the one that stays there.
     L.thumb = 9;
-    L.pitch = L.boxW / N;
+    // the thumbnail row runs ACROSS the strip: a horizontal row above a
+    // vertical strip on desktop, a vertical column beside a horizontal strip
+    // on a phone — the same move, mirrored
+    L.pitch = (L.mobile ? L.boxH : L.boxW) / N;
     L.mid = Math.round((N - 1) / 2);
   }
 
@@ -180,28 +191,20 @@ export function initTop({ lenis, reduced }) {
     if (d > L.total / 2) d -= L.total;
     return d;
   };
-  /* the strip offset that puts frame i on the centre line */
-  const restFor = (i) => (L.mobile
-    ? clamp(0, L.travel, geo[i].top + geo[i].w / 2 - L.vw / 2)
-    : wrap(geo[i].top + geo[i].h / 2 - L.vh / 2));
+  /* size of a frame along the travel axis */
+  const along = (g) => (L.mobile ? g.w : g.h);
+  /* the strip offset that puts frame i on the centre line — same on both
+     layouts now that the phone loops too */
+  const restFor = (i) => wrap(geo[i].top + along(geo[i]) / 2 - (L.mobile ? L.vw : L.vh) / 2);
 
   /* Nearest frame to the centre line. Not "the frame containing the centre":
-     there are gaps between frames now, and the centre spends real time
-     inside one. */
+     there are gaps between frames, and the centre line spends real time
+     inside one of them. */
   function activeIndex() {
-    const span = L.mobile ? L.vw : L.vh;
+    const centre = wrap(S.off + (L.mobile ? L.vw : L.vh) / 2);
     let best = 0, bd = Infinity;
-    if (L.mobile) {
-      const centre = S.off + span / 2;
-      for (let i = 0; i < N; i++) {
-        const d = Math.abs(geo[i].top + geo[i].w / 2 - centre);
-        if (d < bd) { bd = d; best = i; }
-      }
-      return best;
-    }
-    const centre = wrap(S.off + span / 2);
     for (let i = 0; i < N; i++) {
-      const d = Math.abs(wrapDelta(geo[i].top + geo[i].h / 2 - centre));
+      const d = Math.abs(wrapDelta(geo[i].top + along(geo[i]) / 2 - centre));
       if (d < bd) { bd = d; best = i; }
     }
     return best;
@@ -218,9 +221,7 @@ export function initTop({ lenis, reduced }) {
       // travelled the long way to the bottom instead of rising. Anchoring on
       // the centred position makes the sign of y match the frame's place in
       // the running order — left of the row goes up, right of it goes down.
-      const span = L.mobile ? L.vw : L.vh;
-      const size = L.mobile ? g.w : g.h;
-      const centred = span / 2 - size / 2;
+      const centred = (L.mobile ? L.vw : L.vh) / 2 - along(g) / 2;
       const raw = g.top - off;
       // During the opening the frames must fan out in RUNNING ORDER, so the
       // raw (unwrapped) position is what counts. The nearest representative
@@ -228,28 +229,34 @@ export function initTop({ lenis, reduced }) {
       // from the centred one sits on the tie and gets sent the other way —
       // which is the single frame that was seen swinging down instead of up.
       // Both agree for everything on screen, so the handover is invisible.
-      // A phone scrolls a finite list: there is no wrapping to do, and the
-      // native scrollbar could not represent a loop anyway.
-      const y = L.mobile ? raw : (S.intro < 1 ? raw : centred + wrapDelta(raw - centred));
+      const y = S.intro < 1 ? raw : centred + wrapDelta(raw - centred);
       const el = cards[i];
       // Every card stays rendered and focusable — the stage clips whatever
       // sits outside it. Hiding the off-screen ones with visibility made
       // them unfocusable, so tabbing could only ever reach the four frames
       // that happened to be on screen.
-      let w = g.w, h = g.h, x = -g.w / 2, yy = y;
+      let w = g.w, h = g.h;
+      // `t` runs on the travel axis, `c` across it. Which CSS axis each maps
+      // to is decided once, at the transform.
+      let t = y;
+      let c = L.mobile ? L.vh / 2 - h / 2 : -w / 2;
 
       if (S.intro < 1) {
-        // Opening: spread first (thumbnails fan out from the centre along
-        // the centre line), then grow into the strip. The two overlap, so
-        // the row is still opening while the first frames start to rise.
+        // Opening: the frames fan out across the strip as thumbnails, then
+        // grow and swing into it. The two overlap, so the row is still
+        // opening while the first frames start to move.
         const spread = ease(clamp(0, 1, S.intro / 0.52));
         const grow = easeGrow(clamp(0, 1, (S.intro - 0.44) / 0.56));
-        const tx = (i - L.mid) * L.pitch * spread;
-        const ty = L.vh / 2 - L.thumb / 2;
         w = lerp(L.thumb, g.w, grow);
         h = lerp(L.thumb - 2, g.h, grow);
-        x = lerp(tx - w / 2, -w / 2, grow);
-        yy = lerp(ty, y, grow);
+        // every thumbnail starts on the centre of the travel axis, and the
+        // row opens from L.mid — so the frame in the middle of the row is
+        // the one that ends up on the centre line, without travelling
+        const t0 = (L.mobile ? L.vw : L.vh) / 2 - (L.mobile ? w : h) / 2;
+        const cMid = L.mobile ? L.vh / 2 - h / 2 : -w / 2;
+        const c0 = cMid + (i - L.mid) * L.pitch * spread;
+        t = lerp(t0, y, grow);
+        c = lerp(c0, cMid, grow);
         el.style.width = `${w.toFixed(1)}px`;
         el.style.height = `${h.toFixed(1)}px`;
       } else if (S.introDone !== true) {
@@ -264,15 +271,15 @@ export function initTop({ lenis, reduced }) {
       }
 
       el.style.transform = L.mobile
-        ? `translate3d(${yy.toFixed(2)}px, ${(L.vh / 2 - h / 2).toFixed(1)}px, 0)`
-        : `translate3d(${x.toFixed(1)}px, ${yy.toFixed(2)}px, 0)`;
+        ? `translate3d(${t.toFixed(2)}px, ${c.toFixed(1)}px, 0)`
+        : `translate3d(${c.toFixed(1)}px, ${t.toFixed(2)}px, 0)`;
 
       // parallax: the picture lags the frame's displacement from the centre.
       // NB: not named `off` — the strip offset of that name lives in this
       // same function and a shadowing const would put it in a TDZ for the
       // `let y = g.top - off` line above.
-      const half = L.mobile ? L.vw / 2 : L.vh / 2;
-      const mid = yy + (L.mobile ? w : h) / 2;
+      const half = (L.mobile ? L.vw : L.vh) / 2;
+      const mid = t + (L.mobile ? w : h) / 2;
       const lag = clamp(-g.reach, g.reach, -PARALLAX * (mid - half));
       pics[i].style.transform = L.mobile
         ? `translate3d(${lag.toFixed(2)}px, 0, 0)`
@@ -360,7 +367,8 @@ export function initTop({ lenis, reduced }) {
      path crossed the seam. */
   function goTo(i) {
     if (L.mobile) {
-      lenis.scrollTo(restFor(i), { force: true });
+      // travel the short way round from wherever the scroll currently is
+      lenis.scrollTo(window.scrollY + wrapDelta(restFor(i) - S.off), { force: true });
       return;
     }
     S.target = restFor(i);
@@ -398,7 +406,7 @@ export function initTop({ lenis, reduced }) {
     }
 
     if (L.mobile) {
-      S.off = clamp(0, L.travel, window.scrollY);
+      S.off = wrap(window.scrollY - L.base);
       place();
       S.raf = requestAnimationFrame(tick);
       return;
@@ -474,9 +482,14 @@ export function initTop({ lenis, reduced }) {
       S.live = true;
       measure();
       if (L.mobile) {
-        // the document is the input: leave lenis running so the scroll keeps
-        // the site's easing, and start at the first frame
-        lenis.scrollTo(0, { immediate: true, force: true });
+        // the document is the input. Start part way down the runway so the
+        // strip can be scrolled backwards too, positioned so the frame in
+        // the middle of the opening row is the one on the centre line.
+        // ⚠️ lenis caches the document height; measure() has just made the
+        // runway tall, so without this the scrollTo is clamped to the old
+        // (short) limit and lands at 0.
+        lenis.resize();
+        lenis.scrollTo(L.base + restFor(L.mid), { immediate: true, force: true });
         window.addEventListener('scroll', onScroll, { passive: true });
       } else {
         // the strip owns the wheel — the document itself never scrolls here
@@ -517,7 +530,8 @@ export function initTop({ lenis, reduced }) {
       // keep whatever is centred centred, rather than preserving a raw ratio
       const a = S.active >= 0 ? S.active : 0;
       measure();
-      S.off = restFor(a);
+      if (L.mobile) { lenis.resize(); lenis.scrollTo(L.base + restFor(a), { immediate: true, force: true }); }
+      else S.off = restFor(a);
       S.target = null;
       place();
     },

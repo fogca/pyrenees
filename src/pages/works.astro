@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 import T from '../components/T.astro';
 import archive from '../data/archive.json';
 // Works — the catalogue index, rebuilt 2026-08-14 against the NAKORNSANG
@@ -18,10 +19,6 @@ const EAGER_COUNT = 8; // first screenful loads eagerly, the rest lazily
   <main class="page-wrapper works">
     <header class="works__head">
       <h1 class="u-page works__title">Works</h1>
-      <p class="u-data works__count">
-        <span>{String(archive.length)}</span>
-        <span>Projects</span>
-      </p>
     </header>
 
     <ul class="works__grid">
@@ -54,11 +51,9 @@ const EAGER_COUNT = 8; // first screenful loads eagerly, the rest lazily
       ))}
     </ul>
 
-    <footer class="foot u-micro">
-      <span>2026 Pyrenees Pictures Studio, Tokyo</span>
-      <a class="u-data" href="mailto:hello@pyrenees.studio">hello@pyrenees.studio</a>
-    </footer>
   </main>
+
+  <SiteFooter />
 </Base>
 
 <style>
@@ -72,23 +67,8 @@ const EAGER_COUNT = 8; // first screenful loads eagerly, the rest lazily
   }
 
   /* ——— header: the one big thing on the page ——— */
-  .works__head {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 24px;
-    padding-bottom: clamp(14px, 2vh, 22px);
-    border-bottom: 1px solid var(--line-soft);
-  }
+  .works__head { padding-bottom: clamp(14px, 2vh, 22px); }
   .works__title { margin: 0; }
-  .works__count {
-    display: flex;
-    gap: 8px;
-    padding-bottom: 4px;
-    color: var(--color-ink);
-    opacity: 0.56;
-    white-space: nowrap;
-  }
 
   /* ——— the XY grid ———
      Fixed column count per breakpoint => fixed column width. `align-items:
@@ -130,7 +110,7 @@ const EAGER_COUNT = 8; // first screenful loads eagerly, the rest lazily
     display: flex;
     align-items: baseline;
     gap: 8px;
-    margin-top: 10px;
+    margin-top: 12px;
   }
   .works__no { color: var(--color-ink); opacity: 0.56; }
   .works__name {
@@ -145,16 +125,6 @@ const EAGER_COUNT = 8; // first screenful loads eagerly, the rest lazily
     opacity: 0.56;
   }
 
-  .foot {
-    display: flex;
-    justify-content: space-between;
-    gap: 16px;
-    margin-top: auto;
-    padding: 26px 0 22px;
-    border-top: 1px solid var(--line-soft);
-    color: var(--color-grey);
-  }
-  .foot a:hover { color: var(--color-ink); }
 
   /* 5 up (PC) -> 4 -> 3 (tablet) -> 2 (SP) */
   @media (max-width: 1200px) {

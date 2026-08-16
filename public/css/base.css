@@ -173,12 +173,6 @@ img { display: block; max-width: 100%; -webkit-user-drag: none; }
 :root[data-lang='ja'] .t-en { display: none; }
 :root[data-lang='ja'] .t-ja { display: inline; }
 
-/* language switch — a pair of hairline labels, current one inked */
-.langsw { display: inline-flex; gap: 5px; align-items: baseline; }
-.langsw button { opacity: 0.4; transition: opacity 0.2s ease; }
-.langsw button:hover { opacity: 0.75; }
-.langsw button[aria-pressed='true'] { opacity: 1; }
-
 /* paper grain — one shared texture across every page */
 .grain {
   position: fixed;

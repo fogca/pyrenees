@@ -1,5 +1,6 @@
 ---
 import Base from '../../layouts/Base.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
 import archive from '../../data/archive.json';
 // Work detail — the image first and clean (the hero box carries the true
 // aspect, so nothing is cropped or warped), then a ruled title band with
@@ -17,18 +18,14 @@ const next = archive[(i + 1) % archive.length];
 ---
 <Base title={`${entry.title} — Pyrenees Pictures Studio`} description={entry.body ?? `${entry.title}, ${entry.year} — Pyrenees Pictures Studio.`}>
   <main class="page-wrapper detail">
-    <div class="detail__top u-data">
-      <a href="/works">&larr; Works</a>
-      <span>{entry.code}. — {entry.no}/{String(archive.length).padStart(2, '0')}</span>
-    </div>
+
+    <h1 class="detail__title u-page">{entry.title}</h1>
 
     <figure class="detail__hero" style={`--aspect:${entry.aspect}`} transition:name={`tile-${entry.slug}`}>
       <img src={entry.image} alt={entry.title} width={entry.width} height={entry.height} />
     </figure>
 
-    <!-- ——— title band: name left, metadata columns right ——— -->
     <div class="detail__band">
-      <h1 class="detail__title u-page">{entry.title}</h1>
       <div class="detail__meta">
         {entry.category && (
           <div class="detail__mcol">
@@ -78,29 +75,24 @@ const next = archive[(i + 1) % archive.length];
       <a href={`/archive/${next.slug}/`}>{next.title} &rarr;</a>
     </nav>
 
-    <footer class="foot u-micro">
-      <span>2026 Pyrenees Pictures Studio, Tokyo</span>
-      <a class="u-data" href="mailto:hello@pyrenees.studio">hello@pyrenees.studio</a>
-    </footer>
   </main>
+
+  <SiteFooter />
 </Base>
 
 <style>
   .page-wrapper { padding-inline: var(--pad-inline); }
   .detail { padding-top: 96px; }
-  .detail__top {
-    display: flex;
-    justify-content: space-between;
-    color: var(--color-ink);
-    opacity: 0.7;
-    margin-bottom: 22px;
-  }
-  .detail__top a:hover { opacity: 1; }
+  .detail__title { margin-bottom: clamp(20px, 3.5vh, 44px); }
 
+  /* Full bleed: out of the wrapper's inline padding and across the viewport.
+     Height is written out rather than left to aspect-ratio + max-height —
+     those two fight and collapse the box (already fixed once on the plates
+     below). min() keeps a tall frame from running past one screen. */
   .detail__hero {
-    aspect-ratio: var(--aspect);
-    max-height: 76vh;
-    margin-inline: auto;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    height: min(calc(100vw / var(--aspect)), 100vh);
     overflow: clip;
     background: var(--ink-04);
   }
@@ -108,12 +100,9 @@ const next = archive[(i + 1) % archive.length];
 
   /* ——— title band ——— */
   .detail__band {
-    margin-top: clamp(44px, 7vh, 86px);
-    padding-top: 18px;
-    border-top: 1px solid var(--line-soft);
+    margin-top: clamp(28px, 4.5vh, 56px);
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
+    justify-content: flex-start;
     gap: 32px;
     flex-wrap: wrap;
   }
@@ -175,15 +164,6 @@ const next = archive[(i + 1) % archive.length];
   }
   .detail__nav a:hover { color: var(--color-ink); }
 
-  .foot {
-    display: flex;
-    justify-content: space-between;
-    margin-top: clamp(50px, 8vh, 90px);
-    padding: 26px 0 22px;
-    border-top: 1px solid var(--line-soft);
-    color: var(--color-grey);
-  }
-  .foot a:hover { color: var(--color-ink); }
 
   @media (max-width: 760px) {
     .detail__crow { grid-template-columns: 1fr; gap: 4px; }

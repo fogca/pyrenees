@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import SiteFooter from '../components/SiteFooter.astro';
 import T from '../components/T.astro';
 
 // About — the page answers one question: what kind of studio is this. The
@@ -121,11 +122,9 @@ import T from '../components/T.astro';
       </div>
     </section>
 
-    <footer class="foot u-micro">
-      <span>2026 Pyrenees Pictures Studio, Tokyo</span>
-      <span>Live action to full CG</span>
-    </footer>
   </main>
+
+  <SiteFooter />
 </Base>
 
 <style is:global>
@@ -213,13 +212,6 @@ import T from '../components/T.astro';
   .ab__d a { border-bottom: 1px solid var(--line); }
   .ab__d a:hover { opacity: 1; }
 
-  .foot {
-    display: flex;
-    justify-content: space-between;
-    margin-top: auto;
-    padding: 26px 0 22px;
-    border-top: 1px solid var(--line-soft);
-  }
 
   @media (max-width: 760px) {
     .ab__hero { min-height: 68vh; }

@@ -19,12 +19,12 @@ const isPrice = path.startsWith('/contact');
   <nav class="hd__nav u-micro" aria-label="Site">
     <a href="/works" class:list={[{ 'is-on': isWork }]}>Work</a>
     <a href="/about" class:list={[{ 'is-on': isStudio }]}>Studio</a>
-    <a href="/contact" class:list={[{ 'is-on': isPrice }]}>Price &amp; Contact</a>
-    <span class="langsw" role="group" aria-label="Language">
-      <button type="button" data-lang="en" aria-pressed="true">EN</button>
-      <span aria-hidden="true">/</span>
-      <button type="button" data-lang="ja" aria-pressed="false">JA</button>
-    </span>
+    <a href="/contact" class:list={[{ 'is-on': isPrice }]}>Contact</a>
+    <!-- One label, not a pair: it reads as the language you are in, and
+         tapping it hands you the other one. -->
+    <button class="hd__lang" id="langBtn" type="button">
+      <span class="t-en">EN</span><span class="t-ja">JA</span>
+    </button>
   </nav>
 </header>
 
@@ -62,6 +62,8 @@ const isPrice = path.startsWith('/contact');
   .hd__nav > a.is-on,
   .hd__nav > a:hover { text-decoration-line: underline; }
   .hd__nav > a:hover:not(.is-on) { text-decoration-color: var(--line); }
+  .hd__lang { color: var(--color-ink); }
+  .hd__lang:hover { text-decoration: underline; text-underline-offset: 4px; }
 
   /* the bar carries four items now, so the wordmark gives way first */
   @media (max-width: 720px) {
