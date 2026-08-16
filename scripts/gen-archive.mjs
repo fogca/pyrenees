@@ -13,22 +13,22 @@ import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const SRC_DIR = join(ROOT, 'scripts/source-images');
+const IS_IMG = /\.(jpe?g|png|webp|avif|tiff?)$/i;
+// Stand-in pool. `placeholder-photos/` wins when it has anything in it, so a
+// temporary look can be swapped in and out by adding or emptying one folder;
+// `source-images/` (the studio's own MILES158 frames) is the fallback.
+const PHOTO_DIR = join(ROOT, 'scripts/placeholder-photos');
+const usePhotos = existsSync(PHOTO_DIR) && readdirSync(PHOTO_DIR).some((f) => IS_IMG.test(f));
+const SRC_DIR = usePhotos ? PHOTO_DIR : join(ROOT, 'scripts/source-images');
 const OUT_DIR = join(ROOT, 'public/images/archive');
 const DATA_FILE = join(ROOT, 'src/data/archive.json');
 
 const INK = '#0d0d0c';
 const PAPER = '#ffffff';
 
-// Pool order is deliberate: photography first (leads the feed), brand boards
-// interleaved later for rhythm.
-const POOL = [
-  'scene-coast.webp', 'hero_1_poster.jpg', 'LandCruiserFJ-VX.webp', 'scene-machiya.webp',
-  'LC500.png', 'place.jpg', 'symbol.png', 'scene-mountain.webp',
-  'AlphardHybrid-Z.webp', 'scene-aerial.webp', 'tagline.png', 'cleaning.webp',
-  'LM500.png', '01_logotype_primary.png', 'colors.png', '08_typography_latin.png',
-  '10_type_in_use.png', 'app_icon.png', '06_color_palette.png',
-];
+// Read the pool off disk in filename order — naming the files is how the
+// order is set, so there is no list here to fall out of sync with the folder.
+const POOL = readdirSync(SRC_DIR).filter((f) => IS_IMG.test(f)).sort();
 
 /* ——— 1. optimize images ————————————————————— */
 rmSync(OUT_DIR, { recursive: true, force: true });

@@ -4,6 +4,12 @@
    viewport, flanked by two columns of project names.
 
    Measured from the reference (cathydolle.com, 1440x810, 2026-08-14):
+   On a phone the same strip lies DOWN: the frames run left to right and the
+   page's own vertical scroll drives them (the runway element behind the
+   stage supplies the scroll distance, 1px of scroll = 1px of travel). Native
+   scrolling means native momentum and no touch-action fight; the loop is
+   dropped there because a native scrollbar cannot wrap.
+
    - the reference stacks the frames edge to edge; this build sets them with
      a small gap (principal's call, 2026-08-14) so each picture reads on its
      own. The ragged silhouette still comes from the pictures' own widths.
@@ -63,6 +69,7 @@ export function initTop({ lenis, reduced }) {
     href: c.getAttribute('href'),
   }));
   const dot = stage.querySelector('.tp__dot');
+  const run = document.querySelector('.tp__run'); // sibling of the stage
   const meta = stage.querySelector('.tp__meta');
   const faces = meta ? [...meta.querySelectorAll('.tp__face')] : [];
   const cross = stage.querySelector('.tp__cross');
@@ -87,8 +94,15 @@ export function initTop({ lenis, reduced }) {
     const cols = 12;
     const gut = 8;
     const col = (L.vw - pad * 2 - gut * (cols - 1)) / cols;
-    L.boxW = L.mobile ? L.vw - pad * 2 : col * 3 + gut * 2;
-    L.boxH = L.vh * 0.4;
+    if (L.mobile) {
+      // lying down: the long axis is X, so the frame is capped by height and
+      // allowed most of the width
+      L.boxW = L.vw * 0.78;
+      L.boxH = L.vh * 0.52;
+    } else {
+      L.boxW = col * 3 + gut * 2;
+      L.boxH = L.vh * 0.4;
+    }
 
     L.gap = L.mobile ? 10 : Math.round(clamp(12, 22, L.vh * 0.022));
 
@@ -100,8 +114,10 @@ export function initTop({ lenis, reduced }) {
       let w = L.boxW;
       let h = w / a;
       if (h > L.boxH) { h = L.boxH; w = h * a; }
+      // `top` is the position along the travel axis: Y on desktop, X on a
+      // phone. Everything downstream reads it through that one name.
       geo[i] = { w, h, top };
-      top += h + L.gap;
+      top += (L.mobile ? w : h) + L.gap;
     }
     L.total = top; // the trailing gap is what keeps the loop evenly spaced
 
@@ -116,6 +132,13 @@ export function initTop({ lenis, reduced }) {
       const ph = g.h + g.reach * 2;
       pics[i].style.height = `${ph.toFixed(1)}px`;
       pics[i].style.top = `${(-g.reach).toFixed(1)}px`;
+    }
+
+    // The phone scrolls the document itself; the runway is what gives it
+    // something to scroll. One pixel of scroll is one pixel of travel.
+    if (run) {
+      L.travel = L.mobile ? Math.max(0, L.total - geo[N - 1].w - L.gap) : 0;
+      run.style.height = L.mobile ? `${(L.travel + L.vh).toFixed(0)}px` : '0px';
     }
 
     // The opening row: N thumbnails on the centre line, spanning the same
@@ -158,14 +181,25 @@ export function initTop({ lenis, reduced }) {
     return d;
   };
   /* the strip offset that puts frame i on the centre line */
-  const restFor = (i) => wrap(geo[i].top + geo[i].h / 2 - L.vh / 2);
+  const restFor = (i) => (L.mobile
+    ? clamp(0, L.travel, geo[i].top + geo[i].w / 2 - L.vw / 2)
+    : wrap(geo[i].top + geo[i].h / 2 - L.vh / 2));
 
   /* Nearest frame to the centre line. Not "the frame containing the centre":
      there are gaps between frames now, and the centre spends real time
      inside one. */
   function activeIndex() {
-    const centre = wrap(S.off + L.vh / 2);
+    const span = L.mobile ? L.vw : L.vh;
     let best = 0, bd = Infinity;
+    if (L.mobile) {
+      const centre = S.off + span / 2;
+      for (let i = 0; i < N; i++) {
+        const d = Math.abs(geo[i].top + geo[i].w / 2 - centre);
+        if (d < bd) { bd = d; best = i; }
+      }
+      return best;
+    }
+    const centre = wrap(S.off + span / 2);
     for (let i = 0; i < N; i++) {
       const d = Math.abs(wrapDelta(geo[i].top + geo[i].h / 2 - centre));
       if (d < bd) { bd = d; best = i; }
@@ -184,7 +218,9 @@ export function initTop({ lenis, reduced }) {
       // travelled the long way to the bottom instead of rising. Anchoring on
       // the centred position makes the sign of y match the frame's place in
       // the running order — left of the row goes up, right of it goes down.
-      const centred = L.vh / 2 - g.h / 2;
+      const span = L.mobile ? L.vw : L.vh;
+      const size = L.mobile ? g.w : g.h;
+      const centred = span / 2 - size / 2;
       const raw = g.top - off;
       // During the opening the frames must fan out in RUNNING ORDER, so the
       // raw (unwrapped) position is what counts. The nearest representative
@@ -192,7 +228,9 @@ export function initTop({ lenis, reduced }) {
       // from the centred one sits on the tie and gets sent the other way —
       // which is the single frame that was seen swinging down instead of up.
       // Both agree for everything on screen, so the handover is invisible.
-      const y = S.intro < 1 ? raw : centred + wrapDelta(raw - centred);
+      // A phone scrolls a finite list: there is no wrapping to do, and the
+      // native scrollbar could not represent a loop anyway.
+      const y = L.mobile ? raw : (S.intro < 1 ? raw : centred + wrapDelta(raw - centred));
       const el = cards[i];
       // Every card stays rendered and focusable — the stage clips whatever
       // sits outside it. Hiding the off-screen ones with visibility made
@@ -225,14 +263,20 @@ export function initTop({ lenis, reduced }) {
         }
       }
 
-      el.style.transform = `translate3d(${x.toFixed(1)}px, ${yy.toFixed(2)}px, 0)`;
+      el.style.transform = L.mobile
+        ? `translate3d(${yy.toFixed(2)}px, ${(L.vh / 2 - h / 2).toFixed(1)}px, 0)`
+        : `translate3d(${x.toFixed(1)}px, ${yy.toFixed(2)}px, 0)`;
 
       // parallax: the picture lags the frame's displacement from the centre.
       // NB: not named `off` — the strip offset of that name lives in this
       // same function and a shadowing const would put it in a TDZ for the
       // `let y = g.top - off` line above.
-      const lag = clamp(-g.reach, g.reach, -PARALLAX * (yy + h / 2 - L.vh / 2));
-      pics[i].style.transform = `translate3d(0, ${lag.toFixed(2)}px, 0)`;
+      const half = L.mobile ? L.vw / 2 : L.vh / 2;
+      const mid = yy + (L.mobile ? w : h) / 2;
+      const lag = clamp(-g.reach, g.reach, -PARALLAX * (mid - half));
+      pics[i].style.transform = L.mobile
+        ? `translate3d(${lag.toFixed(2)}px, 0, 0)`
+        : `translate3d(0, ${lag.toFixed(2)}px, 0)`;
     }
 
     // The name waits until the frames have landed.
@@ -289,14 +333,19 @@ export function initTop({ lenis, reduced }) {
 
   /* ---------- input ---------- */
   function onWheel(e) {
+    if (L.mobile) return;   // the document scrolls itself there
     e.preventDefault();
     S.target = null;
     S.vel += e.deltaY * (reduced ? 1 : 0.65);
   }
 
   let touchY = 0;
-  const onTouchStart = (e) => { touchY = e.touches[0].clientY; S.target = null; S.touching = true; };
+  const onTouchStart = (e) => {
+    if (L.mobile) return;
+    touchY = e.touches[0].clientY; S.target = null; S.touching = true;
+  };
   const onTouchMove = (e) => {
+    if (L.mobile) return;
     const y = e.touches[0].clientY;
     S.vel += (touchY - y) * 1.9;
     touchY = y;
@@ -310,6 +359,10 @@ export function initTop({ lenis, reduced }) {
      the end of each frame and the two would fight the moment the eased
      path crossed the seam. */
   function goTo(i) {
+    if (L.mobile) {
+      lenis.scrollTo(restFor(i), { force: true });
+      return;
+    }
     S.target = restFor(i);
     S.vel = 0;
   }
@@ -328,10 +381,28 @@ export function initTop({ lenis, reduced }) {
     S.pointer = true;
   }
 
+  /* On a phone the offset is simply the scroll position — native momentum,
+     native rubber-banding, nothing to emulate. */
+  const onScroll = () => { if (L.mobile) S.scrollDirty = true; };
+
   /* ---------- frame ---------- */
   function tick(ts) {
     const dtMs = S.last ? Math.min(50, ts - S.last) : 16.7;
     S.last = ts;
+
+    // The opening runs on both layouts, so its clock has to advance BEFORE
+    // the phone branch returns — leaving it below meant the frames stayed
+    // 9px thumbnails forever there.
+    if (!S.held && S.intro < 1) {
+      S.intro = Math.min(1, S.intro + dtMs / 2350);
+    }
+
+    if (L.mobile) {
+      S.off = clamp(0, L.travel, window.scrollY);
+      place();
+      S.raf = requestAnimationFrame(tick);
+      return;
+    }
 
     if (S.target !== null) {
       const d = wrapDelta(S.target - S.off);
@@ -349,13 +420,6 @@ export function initTop({ lenis, reduced }) {
         if (Math.abs(wrapDelta(rest - S.off)) > 0.5) { S.target = rest; S.vel = 0; }
       }
     }
-    // The opening runs on its own clock, ahead of any input. Its two
-    // durations are the reference's: ~1.35s of horizontal spread, ~1.0s of
-    // growth, overlapping.
-    if (!S.held && S.intro < 1) {
-      S.intro = Math.min(1, S.intro + dtMs / 2350);
-    }
-
     S.off = wrap(S.off);
     place();
 
@@ -409,9 +473,16 @@ export function initTop({ lenis, reduced }) {
       if (S.live) return;
       S.live = true;
       measure();
-      // the strip owns the wheel — the document itself never scrolls here
-      lenis.stop();
-      window.scrollTo(0, 0);
+      if (L.mobile) {
+        // the document is the input: leave lenis running so the scroll keeps
+        // the site's easing, and start at the first frame
+        lenis.scrollTo(0, { immediate: true, force: true });
+        window.addEventListener('scroll', onScroll, { passive: true });
+      } else {
+        // the strip owns the wheel — the document itself never scrolls here
+        lenis.stop();
+        window.scrollTo(0, 0);
+      }
       S.vel = 0; S.last = 0; S.active = -1; S.target = null; S.touching = false;
       // start centred on the same frame the opening row is built around
       S.off = restFor(L.mid);
@@ -436,6 +507,7 @@ export function initTop({ lenis, reduced }) {
       stage.removeEventListener('touchend', onTouchEnd);
       stage.removeEventListener('touchcancel', onTouchEnd);
       window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('scroll', onScroll);
       stage.removeEventListener('focusin', onFocusIn);
       cancelAnimationFrame(S.raf); S.raf = null;
       lenis.start();
@@ -448,95 +520,6 @@ export function initTop({ lenis, reduced }) {
       S.off = restFor(a);
       S.target = null;
       place();
-    },
-  };
-}
-
-/* ============================================================
-   MENU — the catalogue overlay
-   The "codes" study, promoted to the site menu: destinations set in
-   display size, a floating window previewing whatever is hovered.
-   ============================================================ */
-export function initMenu({ reduced }) {
-  const root = document.getElementById('menu');
-  if (!root) return null;
-  const rows = [...root.querySelectorAll('.mn__row')];
-  const win = root.querySelector('.mn__win');
-  const img = win?.querySelector('img');
-  const btn = document.getElementById('menuBtn');
-  const S = { open: false, x: 0, y: 0, tx: 0, ty: 0, raf: null, shown: false };
-
-  function follow() {
-    S.x = lerp(S.x, S.tx, 0.14);
-    S.y = lerp(S.y, S.ty, 0.14);
-    if (win) win.style.transform = `translate3d(${S.x.toFixed(1)}px, ${S.y.toFixed(1)}px, 0)`;
-    S.raf = requestAnimationFrame(follow);
-  }
-
-  const onMove = (e) => {
-    // clamp by the window's own size or it rides off the edge near the
-    // viewport border
-    const w = win?.offsetWidth ?? 0;
-    const h = win?.offsetHeight ?? 0;
-    S.tx = clamp(12, window.innerWidth - w - 12, e.clientX + 26);
-    S.ty = clamp(12, window.innerHeight - h - 12, e.clientY - h / 2);
-  };
-
-  function preview(el) {
-    if (!img || !el) return;
-    const src = el.dataset.img;
-    if (!src || img.dataset.cur === src) return;
-    img.dataset.cur = src;
-    img.src = src;
-    if (!S.shown) { S.shown = true; win.classList.add('is-on'); }
-  }
-
-  const enter = (e) => preview(e.currentTarget);
-  const leaveRow = () => { S.shown = false; win?.classList.remove('is-on'); };
-
-  function open() {
-    if (S.open) return;
-    S.open = true;
-    root.classList.add('is-open');
-    root.removeAttribute('inert');
-    btn?.setAttribute('aria-expanded', 'true');
-    document.documentElement.style.overflow = 'hidden';
-    window.addEventListener('pointermove', onMove);
-    if (!S.raf && !reduced) S.raf = requestAnimationFrame(follow);
-    rows[0]?.focus({ preventScroll: true });
-  }
-  function close() {
-    if (!S.open) return;
-    S.open = false;
-    root.classList.remove('is-open');
-    root.setAttribute('inert', '');
-    btn?.setAttribute('aria-expanded', 'false');
-    document.documentElement.style.overflow = '';
-    window.removeEventListener('pointermove', onMove);
-    cancelAnimationFrame(S.raf); S.raf = null;
-    leaveRow();
-    btn?.focus({ preventScroll: true });
-  }
-
-  const onKey = (e) => { if (e.key === 'Escape' && S.open) close(); };
-
-  btn?.addEventListener('click', () => (S.open ? close() : open()));
-  root.querySelector('.mn__close')?.addEventListener('click', close);
-  rows.forEach((r) => {
-    r.addEventListener('pointerenter', enter);
-    r.addEventListener('focus', () => preview(r));
-    r.addEventListener('pointerleave', leaveRow);
-    r.addEventListener('click', close);
-  });
-  document.addEventListener('keydown', onKey);
-
-  return {
-    close,
-    destroy() {
-      document.removeEventListener('keydown', onKey);
-      window.removeEventListener('pointermove', onMove);
-      cancelAnimationFrame(S.raf); S.raf = null;
-      document.documentElement.style.overflow = '';
     },
   };
 }

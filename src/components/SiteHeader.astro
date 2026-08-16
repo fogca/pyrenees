@@ -1,25 +1,31 @@
 ---
-// Header: wordmark left, language pair and the menu trigger right. The
-// destinations themselves live in the menu overlay (the catalogue study) —
-// the header stays a single hairline of type on every page.
+// Header: wordmark left, the whole site right. No menu overlay — every
+// destination is a link in the bar (2026-08-14), so nothing is one tap away
+// from being one tap away.
 // The wordmark is unaccented on purpose: every character of "Pyrenees
 // Pictures Studio" exists in the licensed cut, so nothing falls back.
 interface Props { path: string }
 const { path } = Astro.props;
+const isWork = path.startsWith('/works') || path.startsWith('/archive');
+const isStudio = path.startsWith('/about');
+const isPrice = path.startsWith('/contact');
 ---
 <header class="hd">
-  <a class="hd__logo u-micro" href="/">Pyrenees Pictures Studio</a>
+  <a class="hd__logo u-micro" href="/">
+    <span class="hd__full">Pyrenees Pictures Studio</span>
+    <span class="hd__short">Pyrenees</span>
+  </a>
 
-  <div class="hd__right u-micro">
-    <div class="langsw" role="group" aria-label="Language">
+  <nav class="hd__nav u-micro" aria-label="Site">
+    <a href="/works" class:list={[{ 'is-on': isWork }]}>Work</a>
+    <a href="/about" class:list={[{ 'is-on': isStudio }]}>Studio</a>
+    <a href="/contact" class:list={[{ 'is-on': isPrice }]}>Price &amp; Contact</a>
+    <span class="langsw" role="group" aria-label="Language">
       <button type="button" data-lang="en" aria-pressed="true">EN</button>
       <span aria-hidden="true">/</span>
       <button type="button" data-lang="ja" aria-pressed="false">JA</button>
-    </div>
-    <button class="hd__menu" id="menuBtn" type="button" aria-expanded="false" aria-controls="menu">
-      Menu
-    </button>
-  </div>
+    </span>
+  </nav>
 </header>
 
 <style>
@@ -30,14 +36,41 @@ const { path } = Astro.props;
     display: flex;
     align-items: baseline;
     justify-content: space-between;
+    gap: 16px;
     padding: 18px var(--pad-inline);
     pointer-events: none;
   }
   .hd > * { pointer-events: auto; }
-  .hd__logo { letter-spacing: var(--ls-global); }
-  .hd__right { display: flex; align-items: baseline; gap: clamp(16px, 2.4vw, 34px); }
-  .hd__menu:hover,
-  .hd__logo:hover { text-decoration: underline; text-underline-offset: 4px; }
-  /* the menu paints over the header, so the trigger inverts while open */
-  :global(html:has(.mn.is-open)) .hd__menu { opacity: 0.4; }
+  .hd__logo { letter-spacing: var(--ls-global); white-space: nowrap; }
+  .hd__short { display: none; }
+
+  .hd__nav {
+    display: flex;
+    align-items: baseline;
+    gap: clamp(14px, 2.2vw, 34px);
+    white-space: nowrap;
+  }
+  /* colour carries no state on this site (the grey tier is retired), so the
+     current page holds a hairline underline instead */
+  .hd__nav > a {
+    color: var(--color-ink);
+    text-decoration-line: none;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+    transition: text-decoration-color 0.25s ease;
+  }
+  .hd__nav > a.is-on,
+  .hd__nav > a:hover { text-decoration-line: underline; }
+  .hd__nav > a:hover:not(.is-on) { text-decoration-color: var(--line); }
+
+  /* the bar carries four items now, so the wordmark gives way first */
+  @media (max-width: 720px) {
+    .hd { gap: 10px; }
+    .hd__full { display: none; }
+    .hd__short { display: inline; }
+    .hd__nav { gap: 12px; font-size: 11px; }
+  }
+  @media (max-width: 420px) {
+    .hd__nav { gap: 9px; font-size: 10px; }
+  }
 </style>

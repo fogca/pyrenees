@@ -11,7 +11,7 @@
 import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { initTop, initMenu } from './top.js';
+import { initTop } from './top.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -137,13 +137,10 @@ function whenFontplus(cb, timeoutMs = 6000) {
 }
 
 let top = null;
-let menu = null;
 
 document.addEventListener('astro:before-swap', () => {
   top?.leave();
   top = null;
-  menu?.destroy();
-  menu = null;
 });
 
 document.addEventListener('astro:page-load', () => {
@@ -159,8 +156,6 @@ document.addEventListener('astro:page-load', () => {
   });
   whenFontplus((fp) => fp.reload(!window.__fpLoaded));
   window.__fpLoaded = true;
-
-  menu = initMenu({ reduced: REDUCED });
 
   // '/' is the one path the build does not append a slash to, so equality is
   // safe here — anything deeper must compare with the trailing slash in mind.

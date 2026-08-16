@@ -29,6 +29,12 @@ public/icon-512.png
 # ——— NOT PUBLISHABLE ————————————————————————————
 # github.com/fogca/pyrenees is a PUBLIC repo.
 #
+# Temporary mood/reference photography (other brands' work, pulled in as a
+# stand-in look). Fine to publish on the pre-launch preview, NOT ours to
+# redistribute in a public repo. Delete the folder to fall back to the
+# studio's own frames in scripts/source-images/.
+scripts/placeholder-photos/
+
 # Unica 77 LL — Lineto WEB TRIAL. Internal/dev evaluation only, explicitly not
 # cleared for a public production domain, so committing it here would be
 # redistribution. The file stays on disk and in the Cloudflare deploy; it is

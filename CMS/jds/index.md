@@ -1,4 +1,4 @@
-<!-- Japanese Dark Spirits — logo animation (Dev/_studies/jds-logo). Drop stills or
+<!-- Japanese Dark Spirits — logo animation (Dev/Ωstudies/jds-logo). Drop stills or
      rendered frames here as images/01.jpg, 02.jpg, ... -->
 ---
 title: ""

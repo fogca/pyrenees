@@ -6,31 +6,31 @@
     "category": null,
     "monthName": null,
     "year": 2026,
-    "aspect": 1.5066,
-    "image": "/images/archive/scene-coast.webp",
-    "width": 1600,
-    "height": 1062,
-    "plate": "/images/archive/scene-coast-plate.webp",
-    "plateW": 760,
-    "plateH": 504,
+    "aspect": 0.7503,
+    "image": "/images/archive/p01.webp",
+    "width": 736,
+    "height": 981,
+    "plate": "/images/archive/p01-plate.webp",
+    "plateW": 736,
+    "plateH": 981,
     "gallery": [
       {
-        "src": "/images/archive/scene-mountain.webp",
-        "w": 1600,
-        "h": 1073,
-        "aspect": 1.4911
+        "src": "/images/archive/p08.webp",
+        "w": 736,
+        "h": 920,
+        "aspect": 0.8
       },
       {
-        "src": "/images/archive/01-logotype-primary.webp",
-        "w": 1600,
-        "h": 900,
-        "aspect": 1.7778
+        "src": "/images/archive/p04.webp",
+        "w": 1080,
+        "h": 1350,
+        "aspect": 0.8
       },
       {
-        "src": "/images/archive/lc500.webp",
-        "w": 1600,
-        "h": 1896,
-        "aspect": 0.8439
+        "src": "/images/archive/p05.webp",
+        "w": 1200,
+        "h": 1590,
+        "aspect": 0.7547
       }
     ],
     "body": null,
@@ -54,31 +54,31 @@
     "category": null,
     "monthName": null,
     "year": 2026,
-    "aspect": 1.5066,
-    "image": "/images/archive/scene-machiya.webp",
-    "width": 1600,
-    "height": 1062,
-    "plate": "/images/archive/scene-machiya-plate.webp",
+    "aspect": 0.8,
+    "image": "/images/archive/p04.webp",
+    "width": 1080,
+    "height": 1350,
+    "plate": "/images/archive/p04-plate.webp",
     "plateW": 760,
-    "plateH": 504,
+    "plateH": 950,
     "gallery": [
       {
-        "src": "/images/archive/tagline.webp",
-        "w": 1600,
-        "h": 900,
-        "aspect": 1.7778
+        "src": "/images/archive/p01.webp",
+        "w": 736,
+        "h": 981,
+        "aspect": 0.7503
       },
       {
-        "src": "/images/archive/10-type-in-use.webp",
-        "w": 1600,
-        "h": 900,
-        "aspect": 1.7778
+        "src": "/images/archive/p07.webp",
+        "w": 960,
+        "h": 564,
+        "aspect": 1.7021
       },
       {
-        "src": "/images/archive/scene-mountain.webp",
-        "w": 1600,
-        "h": 1073,
-        "aspect": 1.4911
+        "src": "/images/archive/p08.webp",
+        "w": 736,
+        "h": 920,
+        "aspect": 0.8
       }
     ],
     "body": null,
@@ -102,31 +102,31 @@
     "category": null,
     "monthName": null,
     "year": 2026,
-    "aspect": 1.7778,
-    "image": "/images/archive/symbol.webp",
-    "width": 1600,
-    "height": 900,
-    "plate": "/images/archive/symbol-plate.webp",
+    "aspect": 1.7021,
+    "image": "/images/archive/p07.webp",
+    "width": 960,
+    "height": 564,
+    "plate": "/images/archive/p07-plate.webp",
     "plateW": 760,
-    "plateH": 428,
+    "plateH": 447,
     "gallery": [
       {
-        "src": "/images/archive/01-logotype-primary.webp",
-        "w": 1600,
-        "h": 900,
-        "aspect": 1.7778
+        "src": "/images/archive/p04.webp",
+        "w": 1080,
+        "h": 1350,
+        "aspect": 0.8
       },
       {
-        "src": "/images/archive/scene-coast.webp",
-        "w": 1600,
-        "h": 1062,
-        "aspect": 1.5066
+        "src": "/images/archive/p10.webp",
+        "w": 640,
+        "h": 800,
+        "aspect": 0.8
       },
       {
-        "src": "/images/archive/tagline.webp",
-        "w": 1600,
-        "h": 900,
-        "aspect": 1.7778
+        "src": "/images/archive/p01.webp",
+        "w": 736,
+        "h": 981,
+        "aspect": 0.7503
       }
     ],
     "body": null,
@@ -150,31 +150,31 @@
     "category": null,
     "monthName": null,
     "year": 2026,
-    "aspect": 0.6667,
-    "image": "/images/archive/scene-aerial.webp",
-    "width": 800,
-    "height": 1200,
-    "plate": "/images/archive/scene-aerial-plate.webp",
-    "plateW": 760,
-    "plateH": 1140,
+    "aspect": 0.8,
+    "image": "/images/archive/p10.webp",
+    "width": 640,
+    "height": 800,
+    "plate": "/images/archive/p10-plate.webp",
+    "plateW": 640,
+    "plateH": 800,
     "gallery": [
       {
-        "src": "/images/archive/10-type-in-use.webp",
-        "w": 1600,
-        "h": 900,
-        "aspect": 1.7778
+        "src": "/images/archive/p07.webp",
+        "w": 960,
+        "h": 564,
+        "aspect": 1.7021
       },
       {
-        "src": "/images/archive/scene-machiya.webp",
-        "w": 1600,
-        "h": 1062,
-        "aspect": 1.5066
+        "src": "/images/archive/p03.webp",
+        "w": 1200,
+        "h": 1500,
+        "aspect": 0.8
       },
       {
-        "src": "/images/archive/01-logotype-primary.webp",
-        "w": 1600,
-        "h": 900,
-        "aspect": 1.7778
+        "src": "/images/archive/p04.webp",
+        "w": 1080,
+        "h": 1350,
+        "aspect": 0.8
       }
     ],
     "body": null,
@@ -198,31 +198,31 @@
     "category": null,
     "monthName": null,
     "year": 2026,
-    "aspect": 0.8479,
-    "image": "/images/archive/lm500.webp",
-    "width": 1600,
-    "height": 1887,
-    "plate": "/images/archive/lm500-plate.webp",
+    "aspect": 0.8,
+    "image": "/images/archive/p03.webp",
+    "width": 1200,
+    "height": 1500,
+    "plate": "/images/archive/p03-plate.webp",
     "plateW": 760,
-    "plateH": 896,
+    "plateH": 950,
     "gallery": [
       {
-        "src": "/images/archive/scene-coast.webp",
-        "w": 1600,
-        "h": 1062,
-        "aspect": 1.5066
+        "src": "/images/archive/p10.webp",
+        "w": 640,
+        "h": 800,
+        "aspect": 0.8
       },
       {
-        "src": "/images/archive/symbol.webp",
-        "w": 1600,
-        "h": 900,
-        "aspect": 1.7778
+        "src": "/images/archive/p06.webp",
+        "w": 1000,
+        "h": 1243,
+        "aspect": 0.8045
       },
       {
-        "src": "/images/archive/10-type-in-use.webp",
-        "w": 1600,
-        "h": 900,
-        "aspect": 1.7778
+        "src": "/images/archive/p07.webp",
+        "w": 960,
+        "h": 564,
+        "aspect": 1.7021
       }
     ],
     "body": null,
@@ -246,31 +246,31 @@
     "category": null,
     "monthName": null,
     "year": 2026,
-    "aspect": 1.7778,
-    "image": "/images/archive/08-typography-latin.webp",
-    "width": 1600,
-    "height": 900,
-    "plate": "/images/archive/08-typography-latin-plate.webp",
+    "aspect": 0.8045,
+    "image": "/images/archive/p06.webp",
+    "width": 1000,
+    "height": 1243,
+    "plate": "/images/archive/p06-plate.webp",
     "plateW": 760,
-    "plateH": 428,
+    "plateH": 945,
     "gallery": [
       {
-        "src": "/images/archive/scene-machiya.webp",
-        "w": 1600,
-        "h": 1062,
-        "aspect": 1.5066
+        "src": "/images/archive/p03.webp",
+        "w": 1200,
+        "h": 1500,
+        "aspect": 0.8
       },
       {
-        "src": "/images/archive/scene-aerial.webp",
-        "w": 800,
-        "h": 1200,
-        "aspect": 0.6667
+        "src": "/images/archive/p09.webp",
+        "w": 640,
+        "h": 801,
+        "aspect": 0.799
       },
       {
-        "src": "/images/archive/scene-coast.webp",
-        "w": 1600,
-        "h": 1062,
-        "aspect": 1.5066
+        "src": "/images/archive/p10.webp",
+        "w": 640,
+        "h": 800,
+        "aspect": 0.8
       }
     ],
     "body": null,

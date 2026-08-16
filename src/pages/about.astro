@@ -15,11 +15,12 @@ import T from '../components/T.astro';
 <Base
   title="About — Pyrenees Pictures Studio"
   description="An image studio in Tokyo. Live action to full CG, whatever the picture needs."
+  theme="#344da2"
 >
   <main class="page-wrapper ab">
     <!-- ——— the statement ——— -->
     <section class="ab__hero">
-      <h1 class="ab__st u-page">
+      <h1 class="ab__st">
         An image studio in Tokyo. We make pictures by whatever means the
         picture needs, from live action to full CG, and the choice is made
         late, by the picture rather than by the tools we happen to own. What
@@ -149,7 +150,7 @@ import T from '../components/T.astro';
   .ab__hero {
     min-height: 100dvh;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     padding: 96px 0 40px;
   }
   /* larger than the shared page scale: this block is meant to take the
@@ -158,7 +159,20 @@ import T from '../components/T.astro';
      Smaller than a display line would normally be — the sentence is long
      enough that the size is set by wanting it to fill the screen, not by
      wanting each word to be big. */
-  .ab__st { font-size: clamp(24px, 5.4vw, 82px); line-height: 1.0; }
+  /* 42px at 390 through 64px at 1440 — the slope is solved for those two
+     ends rather than left to a plain vw, which would overshoot on wide
+     displays and collapse on small ones.
+     NB: deliberately NOT .u-page. That class carries a JA override in
+     base.css (`:root[data-lang='ja'] .u-page`) whose specificity beats a
+     scoped page rule, and it was silently resetting this size to 5.4vw —
+     this statement is English in both languages, so it wants neither. */
+  .ab__st {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(42px, calc(33.8px + 2.1vw), 64px);
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+  }
 
   /* ——— band ——— */
   .ab__band { border-top: 1px solid var(--line-soft); padding-top: 18px; }

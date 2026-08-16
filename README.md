@@ -3,7 +3,7 @@
 **This folder (`Dev/pyrenees-site`) is the real project.** It was renamed from
 `ristorante-site` on 2026-08-14, catching up with two brand renames
 (Ristorante -> Studio Pyrénées -> Pyrenees Pictures Studio).
-`Dev/_studies/ristorante/` is an early single-file design study kept for
+`Dev/Ωstudies/ristorante/` is an early single-file design study kept for
 reference only. The dev server is the `pyrenees` entry in
 `~/Dropbox/.claude/launch.json` (port 4251); the Cloudflare Pages project is
 `pyrenees-site`.

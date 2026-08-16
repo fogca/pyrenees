@@ -30,6 +30,10 @@
 }
 
 :root {
+  /* light only — the design has no dark variant, and leaving this unset lets
+     iOS Safari substitute a dark canvas for the toolbar and overscroll areas */
+  color-scheme: light;
+
   /* color — pure white paper, solid ink text everywhere (2026-07-29:
      grey/muted tiers retired — --color-grey/-d alias to ink so every
      component that references them for secondary text now reads black). */
@@ -72,7 +76,9 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
+/* the toolbar and overscroll areas take their colour from here */
 html { background: var(--color-paper); }
+body { background: var(--color-paper); }
 /* overflow-x: clip, never hidden (keeps position:sticky alive) */
 html, body { overflow-x: clip; }
 

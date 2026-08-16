@@ -1,15 +1,18 @@
 ---
 import { ClientRouter } from 'astro:transitions';
 import SiteHeader from '../components/SiteHeader.astro';
-import SiteMenu from '../components/SiteMenu.astro';
 
 interface Props {
   title?: string;
   description?: string;
+  /** Colour iOS Safari paints its toolbars with. Must match the page's own
+      background or the bar reads as a foreign band above the content. */
+  theme?: string;
 }
 const {
   title = 'Pyrenees Pictures Studio — An Image Studio, Tokyo',
   description = 'An image studio in Tokyo. Live action to full CG, whatever the picture needs.',
+  theme = '#ffffff',
 } = Astro.props;
 const path = Astro.url.pathname;
 const canonical = new URL(path, Astro.site);
@@ -27,7 +30,16 @@ const ogImage = new URL('/og.png', Astro.site);
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   <link rel="manifest" href="/manifest.webmanifest" />
-  <meta name="theme-color" content="#ffffff" />
+  <!-- iOS Safari tints its status bar and bottom toolbar from theme-color,
+       but a single unqualified tag is NOT enough: with the phone in dark
+       mode Safari keeps its own dark chrome and the bars come out black
+       (with a black-to-page gradient behind the address bar). Declaring the
+       SAME colour for both schemes is what makes it honour the page.
+       The site has no dark variant, hence color-scheme: light. -->
+  <meta name="color-scheme" content="light" />
+  <meta name="theme-color" content={theme} media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content={theme} media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content={theme} />
 
   <!-- Unica 77 LL (Regular, one weight sitewide) — preload so the identity
        paints in the real face on first load rather than a fallback swap -->
@@ -64,7 +76,7 @@ const ogImage = new URL('/og.png', Astro.site);
        project key once the FontPlus contract is issued. -->
   <script is:inline defer src="https://webfont.fontplus.jp/accessor/script/fontplus.js?PYRENEES_FONTPLUS_KEY&aa=1&ab=2"></script>
 
-  <link rel="stylesheet" href="/css/base.css?v=20260814d" />
+  <link rel="stylesheet" href="/css/base.css?v=20260814e" />
   <!-- language before first paint: the switch is CSS-driven (see T.astro),
        so setting the attribute here means the right language is painted
        once, with no flash of the other one -->
@@ -88,7 +100,6 @@ const ogImage = new URL('/og.png', Astro.site);
   </div>
 
   <SiteHeader path={path} />
-  <SiteMenu />
 
   <slot />
 

@@ -62,12 +62,18 @@ const feature = archive;
       <span class="tp__crossLabel">Open project</span>
     </div>
 
-    <a class="tp__contact u-micro" href="/contact">Contact</a>
   </main>
+
+  <!-- On a phone the document scrolls for real and this is what it scrolls
+       against; the script sizes it. It must stay OUTSIDE the fixed stage —
+       inside one it could never give the document any height. -->
+  <div class="tp__run" aria-hidden="true"></div>
 </Base>
 
 <style>
-  /* The top page owns the viewport: the strip scrolls, the document does not */
+  /* Desktop: the page owns the viewport and the strip scrolls inside it.
+     Phone: the document scrolls natively and drives the strip sideways, so
+     the stage is a fixed window over a real runway. */
   .tp {
     position: fixed;
     inset: 0;
@@ -75,6 +81,7 @@ const feature = archive;
     touch-action: none;
     cursor: default;
   }
+  .tp__run { height: 0; }
 
   /* ——— strip ——— */
   .tp__strip {
@@ -188,15 +195,6 @@ const feature = archive;
     white-space: nowrap;
   }
 
-  .tp__contact {
-    position: fixed;
-    right: var(--pad-inline);
-    bottom: 18px;
-    z-index: var(--z-header);
-    color: var(--color-ink);
-  }
-  .tp__contact:hover { text-decoration: underline; text-underline-offset: 4px; }
-
   /* ——— the opening ———
      A single filled square waits on the centre line while the first frames
      decode, then hands over to the thumbnails (which the script animates). */
@@ -220,14 +218,20 @@ const feature = archive;
   .tp__card { opacity: 1; transition: opacity 0.3s ease; }
   .tp__meta { transition: opacity 0.5s ease; }
 
-  /* ——— mobile: the strip takes the width, the name drops to the corner ——— */
+  /* ——— phone: the strip lies down and native scroll drives it ——— */
   @media (max-width: 767px) {
+    .tp {
+      position: fixed;
+      touch-action: auto;   /* the document scroll is the input now */
+    }
+    .tp__run { position: relative; z-index: -1; }
+    .tp__strip { left: 0; width: 100%; }
     .tp__cross { display: none; }
     .tp__meta {
       top: auto;
-      bottom: 18px;
+      bottom: 20px;
       transform: none;
-      width: 58vw;
+      width: 62vw;
     }
     .tp__flip { font-size: 12px; }
   }
