@@ -16,6 +16,10 @@ CMS/<project>/
 
 ## Status
 
+**番号が掲載スイッチ。** `01_`… と番号の付いたフォルダだけがサイトに出ます。番号
+の無いフォルダは検討中の扱いで、生成時に無視されます（消さずに外せます）。並び順
+はその番号どおり。
+
 **Wired in (2026-08-14).** `scripts/gen-archive.mjs` builds
 `src/data/archive.json` from the folders below — one entry each, in the order
 listed in `PROJECTS` in that file. Per folder:

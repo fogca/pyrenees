@@ -7,18 +7,44 @@
 //  3. Generates the OG image (1200x630) and the icon set (favicon.svg,
 //     apple-touch-icon, 192/512 manifest icons)
 // Swap source-images for real photography as it exists; rerun.
-import { mkdirSync, writeFileSync, readdirSync, rmSync, existsSync, readFileSync } from 'node:fs';
+import { mkdirSync, writeFileSync, readdirSync, rmSync, existsSync, readFileSync,
+  openSync, readSync, closeSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const IS_IMG = /\.(jpe?g|png|webp|avif|tiff?)$/i;
+// Sniff the first bytes rather than trust the extension — files arrive from
+// a phone or a download with no suffix at all, and a silently skipped
+// picture looks exactly like a folder nobody has filled in yet.
+const MAGIC = [
+  [0xff, 0xd8, 0xff],                     // jpeg
+  [0x89, 0x50, 0x4e, 0x47],               // png
+  [0x52, 0x49, 0x46, 0x46],               // riff -> webp
+  [0x49, 0x49, 0x2a],                     // tiff le
+  [0x4d, 0x4d, 0x00],                     // tiff be
+];
+function isImageFile(file) {
+  let fd;
+  try {
+    fd = openSync(file, 'r');
+    const buf = Buffer.alloc(12);
+    readSync(fd, buf, 0, 12, 0);
+    if (MAGIC.some((m) => m.every((b, i) => buf[i] === b))) return true;
+    // heif/avif carry their brand at offset 4
+    return buf.slice(4, 8).toString('latin1') === 'ftyp';
+  } catch {
+    return false;
+  } finally {
+    if (fd !== undefined) closeSync(fd);
+  }
+}
 // Stand-in pool. `placeholder-photos/` wins when it has anything in it, so a
 // temporary look can be swapped in and out by adding or emptying one folder;
 // `source-images/` (the studio's own MILES158 frames) is the fallback.
 const PHOTO_DIR = join(ROOT, 'scripts/placeholder-photos');
-const usePhotos = existsSync(PHOTO_DIR) && readdirSync(PHOTO_DIR).some((f) => IS_IMG.test(f));
+const usePhotos = existsSync(PHOTO_DIR)
+  && readdirSync(PHOTO_DIR).some((f) => isImageFile(join(PHOTO_DIR, f)));
 const SRC_DIR = usePhotos ? PHOTO_DIR : join(ROOT, 'scripts/source-images');
 const OUT_DIR = join(ROOT, 'public/images/archive');
 const DATA_FILE = join(ROOT, 'src/data/archive.json');
@@ -29,7 +55,7 @@ const PAPER = '#ffffff';
 
 // Read the pool off disk in filename order — naming the files is how the
 // order is set, so there is no list here to fall out of sync with the folder.
-const POOL = readdirSync(SRC_DIR).filter((f) => IS_IMG.test(f)).sort();
+const POOL = readdirSync(SRC_DIR).filter((f) => isImageFile(join(SRC_DIR, f))).sort();
 
 /* ——— 1. optimize images ————————————————————— */
 rmSync(OUT_DIR, { recursive: true, force: true });
@@ -91,8 +117,11 @@ const dirName = (dir) => {
   const key = dir.replace(/^\d+[_-]?/, '');
   return NAMES[key] ?? key.replace(/[_-]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 };
+// A NUMBER IS THE PUBLISH FLAG. A folder without one is still being decided
+// on and does not go on the site — drop the number back off to pull an entry
+// without deleting anything.
 const PROJECTS = readdirSync(CMS_DIR, { withFileTypes: true })
-  .filter((d) => d.isDirectory() && !d.name.startsWith('_') && !d.name.startsWith('.'))
+  .filter((d) => d.isDirectory() && /^\d+[_-]/.test(d.name))
   .map((d) => d.name)
   .sort((a, b) => a.localeCompare(b, 'en', { numeric: true }))
   .map((dir) => ({ dir, name: dirName(dir) }));
@@ -129,12 +158,12 @@ function readEntryFile(dir) {
   return { front, body: m[2].trim() };
 }
 
-const IMG_RE = /\.(jpe?g|png|webp|avif|tiff?)$/i;
 function realImages(dir) {
   const d = join(CMS_DIR, dir, 'images');
   if (!existsSync(d)) return [];
-  return readdirSync(d).filter((f) => IMG_RE.test(f)).sort()
-    .map((f) => join(d, f));
+  return readdirSync(d).sort()
+    .map((f) => join(d, f))
+    .filter(isImageFile);
 }
 
 const slugify = (t) => t.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
