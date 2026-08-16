@@ -159,7 +159,10 @@ export function initTop({ lenis, reduced }) {
     // vertical strip on desktop, a vertical column beside a horizontal strip
     // on a phone — the same move, mirrored
     L.pitch = (L.mobile ? L.boxH : L.boxW) / N;
-    L.mid = Math.round((N - 1) / 2);
+    // The strip rests on the FIRST project, and scrolling forward walks the
+    // running order from there. The loop means the ones before it are simply
+    // the last few, so the opening row can still open symmetrically.
+    L.mid = 0;
   }
 
   /* ---------- state ---------- */
@@ -213,8 +216,37 @@ export function initTop({ lenis, reduced }) {
     return best;
   }
 
+  /* Layout along the travel axis at the current scale. During the opening
+     the frames are smaller, so the strip is laid out SHORTER — they stay
+     edge to edge the whole way and simply expand outwards from whichever one
+     is on the centre line. Laying them out at their final spacing while
+     still thumbnail-sized is what made them fly apart first and grow after. */
+  const curSize = new Array(N);
+  const curTop = new Array(N);
+  function layout(grow) {
+    let acc = 0;
+    for (let i = 0; i < N; i++) {
+      curSize[i] = lerp(L.thumb, along(geo[i]), grow);
+      curTop[i] = acc;
+      acc += curSize[i] + L.gap * grow;
+    }
+    return acc;
+  }
+
   function place() {
-    const off = wrap(S.off);
+    const introOn = S.intro < 1;
+    const spread = introOn ? ease(clamp(0, 1, S.intro / 0.40)) : 1;
+    const move = introOn ? ease(clamp(0, 1, (S.intro - 0.36) / 0.32)) : 1;
+    const grow = introOn ? easeGrow(clamp(0, 1, (S.intro - 0.66) / 0.34)) : 1;
+    const span = L.mobile ? L.vw : L.vh;
+
+    // while the opening runs the strip is measured at the current scale and
+    // pinned to L.mid; afterwards it is the real layout under the real offset
+    const total = introOn ? layout(grow) : L.total;
+    const off = introOn
+      ? curTop[L.mid] + curSize[L.mid] / 2 - span / 2
+      : wrap(S.off);
+
     for (let i = 0; i < N; i++) {
       const g = geo[i];
       // Place each frame at the loop representative NEAREST the centre line.
@@ -224,15 +256,22 @@ export function initTop({ lenis, reduced }) {
       // travelled the long way to the bottom instead of rising. Anchoring on
       // the centred position makes the sign of y match the frame's place in
       // the running order — left of the row goes up, right of it goes down.
-      const centred = (L.mobile ? L.vw : L.vh) / 2 - along(g) / 2;
-      const raw = g.top - off;
+      const size = introOn ? curSize[i] : along(g);
+      const centred = span / 2 - size / 2;
+      let raw = (introOn ? curTop[i] : g.top) - off;
+      if (introOn) {
+        // keep it on the nearest turn of the (shorter) loop
+        let d = ((raw - centred) % total + total) % total;
+        if (d > total / 2) d -= total;
+        raw = centred + d;
+      }
       // During the opening the frames must fan out in RUNNING ORDER, so the
       // raw (unwrapped) position is what counts. The nearest representative
       // is wrong there: with an even count the frame exactly half a loop
       // from the centred one sits on the tie and gets sent the other way —
       // which is the single frame that was seen swinging down instead of up.
       // Both agree for everything on screen, so the handover is invisible.
-      const y = S.intro < 1 ? raw : centred + wrapDelta(raw - centred);
+      const y = introOn ? raw : centred + wrapDelta(raw - centred);
       const el = cards[i];
       // Every card stays rendered and focusable — the stage clips whatever
       // sits outside it. Hiding the off-screen ones with visibility made
@@ -244,22 +283,22 @@ export function initTop({ lenis, reduced }) {
       let t = y;
       let c = L.mobile ? L.vh / 2 - h / 2 : -w / 2;
 
-      if (S.intro < 1) {
-        // Opening, in three moves that barely overlap: the row fans out,
-        // the thumbnails travel to their places in the strip STILL SMALL,
-        // and only then do they grow. Turning and growing at once read as
-        // one muddled gesture.
-        const spread = ease(clamp(0, 1, S.intro / 0.40));
-        const move = ease(clamp(0, 1, (S.intro - 0.36) / 0.32));
-        const grow = easeGrow(clamp(0, 1, (S.intro - 0.66) / 0.34));
+      if (introOn) {
+        // Three moves that barely overlap: the row fans out, the thumbnails
+        // swing into the strip STILL SMALL and already touching, and only
+        // then does the whole strip grow outwards from the centre.
         w = lerp(L.thumb, g.w, grow);
         h = lerp(L.thumb - 2, g.h, grow);
         // every thumbnail starts on the centre of the travel axis, and the
         // row opens from L.mid — so the frame in the middle of the row is
         // the one that ends up on the centre line, without travelling
-        const t0 = (L.mobile ? L.vw : L.vh) / 2 - (L.mobile ? w : h) / 2;
+        const t0 = span / 2 - (L.mobile ? w : h) / 2;
         const cMid = L.mobile ? L.vh / 2 - h / 2 : -w / 2;
-        const c0 = cMid + (i - L.mid) * L.pitch * spread;
+        // signed distance around the loop, so a row centred on the first
+        // project still opens both ways instead of hanging off one side
+        let di = ((i - L.mid) % N + N) % N;
+        if (di > N / 2) di -= N;
+        const c0 = cMid + di * L.pitch * spread;
         // position is done with `move`; only the box is left to `grow`
         t = lerp(t0, y, move);
         c = lerp(c0, cMid, move);

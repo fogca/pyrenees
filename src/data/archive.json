@@ -1,8 +1,8 @@
 [
   {
     "no": "01",
-    "slug": "miles158",
-    "title": "MILES158",
+    "slug": "pru",
+    "title": "PRU",
     "category": null,
     "monthName": null,
     "year": 2026,
@@ -49,8 +49,8 @@
   },
   {
     "no": "02",
-    "slug": "jds",
-    "title": "Japanese Dark Spirits",
+    "slug": "ysove2001",
+    "title": "YSOVE 2001",
     "category": null,
     "monthName": null,
     "year": 2026,
@@ -97,8 +97,8 @@
   },
   {
     "no": "03",
-    "slug": "ondo",
-    "title": "Ondo",
+    "slug": "msf",
+    "title": "MSF",
     "category": null,
     "monthName": null,
     "year": 2026,
@@ -145,8 +145,8 @@
   },
   {
     "no": "04",
-    "slug": "sann",
-    "title": "SANN",
+    "slug": "unknown",
+    "title": "Unknown",
     "category": null,
     "monthName": null,
     "year": 2026,
@@ -193,38 +193,19 @@
   },
   {
     "no": "05",
-    "slug": "naun",
-    "title": "NAUN",
+    "slug": "sann",
+    "title": "SANN",
     "category": null,
     "monthName": null,
     "year": 2026,
-    "aspect": 0.8,
-    "image": "/images/archive/p03.webp",
-    "width": 1200,
-    "height": 1500,
-    "plate": "/images/archive/p03-plate.webp",
+    "aspect": 0.8218,
+    "image": "/images/archive/06_sann-01.webp",
+    "width": 1600,
+    "height": 1947,
+    "plate": "/images/archive/06_sann-01-plate.webp",
     "plateW": 760,
-    "plateH": 950,
-    "gallery": [
-      {
-        "src": "/images/archive/p10.webp",
-        "w": 640,
-        "h": 800,
-        "aspect": 0.8
-      },
-      {
-        "src": "/images/archive/p06.webp",
-        "w": 1000,
-        "h": 1243,
-        "aspect": 0.8045
-      },
-      {
-        "src": "/images/archive/p07.webp",
-        "w": 960,
-        "h": 564,
-        "aspect": 1.7021
-      }
-    ],
+    "plateH": 925,
+    "gallery": [],
     "body": null,
     "credits": [
       [
@@ -237,12 +218,12 @@
       ]
     ],
     "code": "PP05",
-    "placeholderImages": true
+    "placeholderImages": false
   },
   {
     "no": "06",
-    "slug": "unknown",
-    "title": "Unknown",
+    "slug": "jds",
+    "title": "Japanese Dark Spirits",
     "category": null,
     "monthName": null,
     "year": 2026,
@@ -289,36 +270,48 @@
   },
   {
     "no": "07",
-    "slug": "pru",
-    "title": "PRU",
+    "slug": "ondo",
+    "title": "Ondo",
     "category": null,
     "monthName": null,
     "year": 2026,
-    "aspect": 0.799,
-    "image": "/images/archive/p09.webp",
-    "width": 640,
-    "height": 801,
-    "plate": "/images/archive/p09-plate.webp",
-    "plateW": 640,
-    "plateH": 801,
+    "aspect": 1.3333,
+    "image": "/images/archive/08_ondo-01.webp",
+    "width": 1600,
+    "height": 1200,
+    "plate": "/images/archive/08_ondo-01-plate.webp",
+    "plateW": 760,
+    "plateH": 570,
     "gallery": [
       {
-        "src": "/images/archive/p06.webp",
-        "w": 1000,
-        "h": 1243,
-        "aspect": 0.8045
+        "src": "/images/archive/08_ondo-02.webp",
+        "w": 1600,
+        "h": 900,
+        "aspect": 1.7778
       },
       {
-        "src": "/images/archive/p02.webp",
-        "w": 736,
-        "h": 737,
-        "aspect": 0.9986
+        "src": "/images/archive/08_ondo-03.webp",
+        "w": 1600,
+        "h": 900,
+        "aspect": 1.7778
       },
       {
-        "src": "/images/archive/p03.webp",
-        "w": 1200,
-        "h": 1500,
-        "aspect": 0.8
+        "src": "/images/archive/08_ondo-04.webp",
+        "w": 1600,
+        "h": 1200,
+        "aspect": 1.3333
+      },
+      {
+        "src": "/images/archive/08_ondo-05.webp",
+        "w": 1600,
+        "h": 900,
+        "aspect": 1.7778
+      },
+      {
+        "src": "/images/archive/08_ondo-06.webp",
+        "w": 1500,
+        "h": 2100,
+        "aspect": 0.7143
       }
     ],
     "body": null,
@@ -333,12 +326,12 @@
       ]
     ],
     "code": "PP07",
-    "placeholderImages": true
+    "placeholderImages": false
   },
   {
     "no": "08",
-    "slug": "ysove2001",
-    "title": "YSOVE 2001",
+    "slug": "miles158",
+    "title": "MILES158",
     "category": null,
     "monthName": null,
     "year": 2026,
@@ -385,8 +378,8 @@
   },
   {
     "no": "09",
-    "slug": "msf",
-    "title": "MSF",
+    "slug": "naun",
+    "title": "NAUN",
     "category": null,
     "monthName": null,
     "year": 2026,

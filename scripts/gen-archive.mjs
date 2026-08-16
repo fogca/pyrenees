@@ -22,6 +22,7 @@ const usePhotos = existsSync(PHOTO_DIR) && readdirSync(PHOTO_DIR).some((f) => IS
 const SRC_DIR = usePhotos ? PHOTO_DIR : join(ROOT, 'scripts/source-images');
 const OUT_DIR = join(ROOT, 'public/images/archive');
 const DATA_FILE = join(ROOT, 'src/data/archive.json');
+const CMS_DIR = join(ROOT, 'CMS');
 
 const INK = '#0d0d0c';
 const PAPER = '#ffffff';
@@ -70,21 +71,31 @@ for (const file of POOL) {
    below, the pictures to the placeholder pool above. So the site names real
    work from day one and fills in with real images as each folder is
    completed, with no further code changes. */
-const CMS_DIR = join(ROOT, 'CMS');
-
-// Running order. Also the fallback display name for a folder whose index.md
-// has no title yet — these are the studio's own project names, not invented.
-const PROJECTS = [
-  { dir: 'miles158', name: 'MILES158' },
-  { dir: 'jds', name: 'Japanese Dark Spirits' },
-  { dir: 'ondo', name: 'Ondo' },
-  { dir: 'sann', name: 'SANN' },
-  { dir: 'naun', name: 'NAUN' },
-  { dir: 'unknown', name: 'Unknown' },
-  { dir: 'pru', name: 'PRU' },
-  { dir: 'ysove2001', name: 'YSOVE 2001' },
-  { dir: 'msf', name: 'MSF' },
-];
+// The running order IS the folder order — name the folders `01_x`, `02_y`
+// and that is what the site shows, first to last. Nothing to keep in sync
+// here. Folders starting with `_` are skipped so notes can live alongside.
+// This map only fixes the casing of a name that a folder name cannot carry;
+// anything missing falls back to the folder name with its number stripped.
+const NAMES = {
+  miles158: 'MILES158',
+  jds: 'Japanese Dark Spirits',
+  ondo: 'Ondo',
+  sann: 'SANN',
+  naun: 'NAUN',
+  unknown: 'Unknown',
+  pru: 'PRU',
+  ysove2001: 'YSOVE 2001',
+  msf: 'MSF',
+};
+const dirName = (dir) => {
+  const key = dir.replace(/^\d+[_-]?/, '');
+  return NAMES[key] ?? key.replace(/[_-]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+};
+const PROJECTS = readdirSync(CMS_DIR, { withFileTypes: true })
+  .filter((d) => d.isDirectory() && !d.name.startsWith('_') && !d.name.startsWith('.'))
+  .map((d) => d.name)
+  .sort((a, b) => a.localeCompare(b, 'en', { numeric: true }))
+  .map((dir) => ({ dir, name: dirName(dir) }));
 
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July',
   'August', 'September', 'October', 'November', 'December'];
@@ -170,7 +181,7 @@ for (let i = 0; i < PROJECTS.length; i++) {
 
   entries.push({
     no: String(i + 1).padStart(2, '0'),
-    slug: slugify(dir),
+    slug: slugify(dir.replace(/^\d+[_-]?/, '')),
     title,
     category,
     monthName,
