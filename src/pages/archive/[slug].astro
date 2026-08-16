@@ -74,6 +74,11 @@ const { entry } = Astro.props;
      those two fight and collapse the box (already fixed once on the plates
      below). min() keeps a tall frame from running past one screen. */
   .detail__hero {
+    /* The landing half of the carried picture: app.js stamps the same name
+       on whatever was clicked just before the swap, and the pair morphs.
+       Lost once already to a regex that was removing neighbouring rules —
+       if the thumbnail stops carrying over, look here first. */
+    view-transition-name: pp-hero;
     /* driven by app.js on the way out — see closeFrames */
     clip-path: inset(0 0 var(--cut, 0%) 0);
     width: 100vw;

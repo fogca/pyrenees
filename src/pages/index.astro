@@ -107,7 +107,6 @@ const feature = archive;
     top: 0;
     left: 0;
     display: block;
-    background: var(--ink-04);
     will-change: transform;
   }
   /* The frame clips; the picture inside is taller than the frame and slides
@@ -116,6 +115,10 @@ const feature = archive;
   .tp__fig {
     /* driven by app.js on the way out — see closeFrames */
     clip-path: inset(0 0 var(--cut, 0%) 0);
+    /* the placeholder wash belongs HERE, not on the card: on the parent it
+       survives the clip and leaves a grey rectangle where the picture just
+       closed */
+    background: var(--ink-04);
     position: relative;
     width: 100%;
     height: 100%;

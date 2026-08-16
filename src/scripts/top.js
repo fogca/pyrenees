@@ -245,11 +245,13 @@ export function initTop({ lenis, reduced }) {
       let c = L.mobile ? L.vh / 2 - h / 2 : -w / 2;
 
       if (S.intro < 1) {
-        // Opening: the frames fan out across the strip as thumbnails, then
-        // grow and swing into it. The two overlap, so the row is still
-        // opening while the first frames start to move.
-        const spread = ease(clamp(0, 1, S.intro / 0.52));
-        const grow = easeGrow(clamp(0, 1, (S.intro - 0.44) / 0.56));
+        // Opening, in three moves that barely overlap: the row fans out,
+        // the thumbnails travel to their places in the strip STILL SMALL,
+        // and only then do they grow. Turning and growing at once read as
+        // one muddled gesture.
+        const spread = ease(clamp(0, 1, S.intro / 0.40));
+        const move = ease(clamp(0, 1, (S.intro - 0.36) / 0.32));
+        const grow = easeGrow(clamp(0, 1, (S.intro - 0.66) / 0.34));
         w = lerp(L.thumb, g.w, grow);
         h = lerp(L.thumb - 2, g.h, grow);
         // every thumbnail starts on the centre of the travel axis, and the
@@ -258,8 +260,9 @@ export function initTop({ lenis, reduced }) {
         const t0 = (L.mobile ? L.vw : L.vh) / 2 - (L.mobile ? w : h) / 2;
         const cMid = L.mobile ? L.vh / 2 - h / 2 : -w / 2;
         const c0 = cMid + (i - L.mid) * L.pitch * spread;
-        t = lerp(t0, y, grow);
-        c = lerp(c0, cMid, grow);
+        // position is done with `move`; only the box is left to `grow`
+        t = lerp(t0, y, move);
+        c = lerp(c0, cMid, move);
         el.style.width = `${w.toFixed(1)}px`;
         el.style.height = `${h.toFixed(1)}px`;
       } else if (S.introDone !== true) {
