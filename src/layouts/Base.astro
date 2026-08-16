@@ -143,9 +143,24 @@ const ogImage = new URL('/og.png', Astro.site);
 
   /* default view-transition crossfade stays subtle — the curtain (or the
      tile morph) carries the drama */
+  /* No crossfade on the page as a whole: the frames have already closed by
+     hand before the swap, and fading what is left was the thing that read as
+     everything dissolving. The only motion left is the carried picture. */
   ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation-duration: 0.25s;
+  ::view-transition-new(root) { animation: none; }
+
+  /* The carried picture. Old and new are the SAME photograph, so cross-fading
+     them just double-exposes it — show the incoming one only and let the
+     group's size animation do the travelling. object-fit keeps it from
+     stretching while the box changes shape. */
+  ::view-transition-image-pair(pp-hero) { isolation: none; }
+  ::view-transition-old(pp-hero) { display: none; }
+  ::view-transition-new(pp-hero) {
+    animation: none;
+    mix-blend-mode: normal;
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
   }
 
   /* the shared-element morph is gone; see closeFrames in app.js for what

@@ -81,6 +81,7 @@ function curtainOut() {
 
 let curtainNav = false;
 let framesNav = false;
+let heldFrame = null;
 
 /* ——— leaving a page that has pictures ————————————————
    Every frame closes from its bottom edge upward, in place: the picture
@@ -104,9 +105,9 @@ function closeFrames(clicked) {
     - Math.abs(b.getBoundingClientRect().top - oy));
   return gsap.to(frames, {
     '--cut': '100%',
-    duration: 0.52,
-    ease: 'power3.inOut',
-    stagger: 0.045,
+    duration: 0.78,
+    ease: 'power4.inOut',
+    stagger: 0.055,
   }).then(() => true);
 }
 
@@ -126,6 +127,14 @@ document.addEventListener('astro:before-preparation', (e) => {
   // to the ink curtain.
   framesNav = hasFrames;
   curtainNav = !link && !hasFrames;
+
+  // The picture that was clicked carries over: naming it pairs it with the
+  // detail hero, so it glides into place instead of vanishing with the page.
+  // Named here rather than in the markup so exactly one pair ever exists —
+  // eight named tiles on the top page would each spawn their own group.
+  if (heldFrame) heldFrame.style.viewTransitionName = '';
+  heldFrame = clickedFrame;
+  if (heldFrame) heldFrame.style.viewTransitionName = 'pp-hero';
   // the wipe belongs to picture navigations; the curtain covers the rest
 
   const originalLoader = e.loader;
@@ -151,12 +160,15 @@ document.addEventListener('astro:before-swap', (e) => {
   // in the ::view-transition layer ABOVE the ink. Skip the transition
   // entirely: the swap is covered, nothing is lost, and cards no longer
   // fly across the curtain.
-  // The frames have already closed by hand; a crossfade on top of that
-  // would put the old page back for the length of the transition.
-  if (framesNav) {
+  // Let the transition run when a picture is carrying over — that pair is
+  // the whole point. Without one there is nothing to watch, so skip it.
+  if (framesNav && !heldFrame) {
     e.viewTransition?.ready?.catch(() => {});
     e.viewTransition?.finished?.catch(() => {});
     e.viewTransition?.skipTransition?.();
+  }
+  if (heldFrame) {
+    e.viewTransition?.finished?.catch(() => {}).finally(() => { heldFrame = null; });
   }
   if (curtainNav) {
     // skipTransition() rejects the transition's own promises; nothing here
