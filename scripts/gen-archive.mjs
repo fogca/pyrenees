@@ -81,10 +81,9 @@ const PROJECTS = [
   { dir: 'sann', name: 'SANN' },
   { dir: 'naun', name: 'NAUN' },
   { dir: 'unknown', name: 'Unknown' },
-  // two open slots so the grid and the strip have eight to work with —
-  // rename the folder and this row when each project is known
-  { dir: 'slot07', name: 'Project 07' },
-  { dir: 'slot08', name: 'Project 08' },
+  { dir: 'pru', name: 'PRU' },
+  { dir: 'ysove2001', name: 'YSOVE 2001' },
+  { dir: 'msf', name: 'MSF' },
 ];
 
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July',

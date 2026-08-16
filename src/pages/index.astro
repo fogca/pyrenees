@@ -46,7 +46,7 @@ const feature = archive;
          faces take turns: the outgoing one rolls up and away while the next
          rolls in from below, one turn of a die. -->
     <a class="tp__meta" id="tpMeta" href={`/archive/${feature[0].slug}/`}>
-      <span class="tp__flip">
+      <span class="tp__flip" data-dir="fwd">
         <span class="tp__face" data-face="0"></span>
         <span class="tp__face" data-face="1"></span>
       </span>
@@ -176,13 +176,22 @@ const feature = archive;
     transition: transform 0.62s cubic-bezier(0.45, 0, 0.15, 1),
                 opacity 0.62s cubic-bezier(0.45, 0, 0.15, 1);
   }
-  /* leaving: rolls up and over the top edge */
+  /* Scrolling forward: the face leaving rolls up over the top edge and the
+     next one comes up from below. */
   .tp__face[data-state='out'] { transform: translateY(-100%) rotateX(90deg); opacity: 0; }
-  /* waiting below, ready to roll in — no transition, it is a reset */
-  .tp__face[data-state='below'] {
+  /* the waiting face is placed without a transition — it is a reset, not a move */
+  .tp__face[data-state='wait'] {
     transform: translateY(100%) rotateX(-90deg);
     opacity: 0;
     transition: none;
+  }
+  /* Scrolling back turns the die the other way, so the type moves with the
+     hand rather than against it. */
+  .tp__flip[data-dir='back'] .tp__face[data-state='out'] {
+    transform: translateY(100%) rotateX(-90deg);
+  }
+  .tp__flip[data-dir='back'] .tp__face[data-state='wait'] {
+    transform: translateY(-100%) rotateX(90deg);
   }
   .tp__faceNo { opacity: 0.55; }
 
@@ -266,6 +275,6 @@ const feature = archive;
     /* a die turning is the whole idea, so reduced motion gets a plain cut */
     .tp__face { transition: opacity 0.001s !important; transform: none !important; }
     .tp__face[data-state='out'],
-    .tp__face[data-state='below'] { opacity: 0; transform: none !important; }
+    .tp__face[data-state='wait'] { opacity: 0; transform: none !important; }
   }
 </style>

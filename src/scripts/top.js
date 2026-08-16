@@ -71,6 +71,7 @@ export function initTop({ lenis, reduced }) {
   const dot = stage.querySelector('.tp__dot');
   const run = document.querySelector('.tp__run'); // sibling of the stage
   const meta = stage.querySelector('.tp__meta');
+  const flip = meta?.querySelector('.tp__flip') ?? null;
   const faces = meta ? [...meta.querySelectorAll('.tp__face')] : [];
   const cross = stage.querySelector('.tp__cross');
   const N = cards.length;
@@ -175,6 +176,8 @@ export function initTop({ lenis, reduced }) {
     pointer: false,
     touching: false,
     face: 0,           // which of the two name faces is currently showing
+    dir: 1,            // travel direction, so the die turns with the scroll
+    prevOff: 0,
     intro: 1,          // 0..1 while the opening runs, 1 once it is over
     introDone: true,
     // The hold needs its own flag. Encoding it as `intro === 0` did not work:
@@ -320,12 +323,14 @@ export function initTop({ lenis, reduced }) {
     if (immediate || reduced) {
       fill(front, i);
       front.dataset.state = 'in';
-      back.dataset.state = 'below';
+      back.dataset.state = 'wait';
       return;
     }
 
-    // stage the incoming face below without animating it into position
-    back.dataset.state = 'below';
+    // the turn follows the travel: forward rolls up, backward rolls down
+    if (flip) flip.dataset.dir = S.dir < 0 ? 'back' : 'fwd';
+    // stage the incoming face off-screen without animating it into position
+    back.dataset.state = 'wait';
     fill(back, i);
     // one frame later, let it roll in — set in the same tick and the
     // transition has nothing to interpolate from
@@ -393,6 +398,15 @@ export function initTop({ lenis, reduced }) {
      native rubber-banding, nothing to emulate. */
   const onScroll = () => { if (L.mobile) S.scrollDirty = true; };
 
+  /* Which way the strip is travelling. Wrap-aware, and it ignores the noise
+     of a nearly-still strip so the die does not flip its own direction while
+     a throw is settling. */
+  function trackDir() {
+    const d = wrapDelta(S.off - S.prevOff);
+    if (Math.abs(d) > 0.6) S.dir = d > 0 ? 1 : -1;
+    S.prevOff = S.off;
+  }
+
   /* ---------- frame ---------- */
   function tick(ts) {
     const dtMs = S.last ? Math.min(50, ts - S.last) : 16.7;
@@ -407,6 +421,7 @@ export function initTop({ lenis, reduced }) {
 
     if (L.mobile) {
       S.off = wrap(window.scrollY - L.base);
+      trackDir();
       place();
       S.raf = requestAnimationFrame(tick);
       return;
@@ -429,6 +444,7 @@ export function initTop({ lenis, reduced }) {
       }
     }
     S.off = wrap(S.off);
+    trackDir();
     place();
 
     // crosshair: a small square that trails the pointer over the strip,
@@ -497,6 +513,7 @@ export function initTop({ lenis, reduced }) {
         window.scrollTo(0, 0);
       }
       S.vel = 0; S.last = 0; S.active = -1; S.target = null; S.touching = false;
+      S.dir = 1; S.prevOff = 0;
       // start centred on the same frame the opening row is built around
       S.off = restFor(L.mid);
       stage.addEventListener('wheel', onWheel, { passive: false });
