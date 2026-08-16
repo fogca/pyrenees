@@ -148,33 +148,9 @@ const ogImage = new URL('/og.png', Astro.site);
     animation-duration: 0.25s;
   }
 
-  /* Picture -> work detail. The page that was clicked clips away from the
-     bottom edge upward, so nothing on it moves: the picture under the
-     pointer is simply uncovered as the old page retracts past it. This
-     replaced a shared-element morph plus a crossfade — the morph slid the
-     picture, and the crossfade dimmed everything else on the way out.
-     Scoped to a class app.js sets for these navigations only. */
-  /* the pair isolates its children by default, which keeps the new snapshot
-     painting over the old whatever z-index says — opting out is what lets
-     the outgoing page sit on top and clip away to reveal the incoming one */
-  :root.is-wipe::view-transition-image-pair(root) { isolation: auto; }
-  :root.is-wipe::view-transition-old(root),
-  :root.is-wipe::view-transition-new(root) { mix-blend-mode: normal; }
-  :root.is-wipe::view-transition-old(root) {
-    /* the root snapshot does not carry the page's propagated canvas colour,
-       so without this the incoming page reads straight through the outgoing
-       one and the two sets of type overlap mid-wipe */
-    background: var(--color-paper);
-    animation: pp-wipe-up 0.62s cubic-bezier(0.65, 0, 0.35, 1) both;
-    z-index: 2;
-  }
-  :root.is-wipe::view-transition-new(root) { animation: none; z-index: 1; }
-  @keyframes pp-wipe-up {
-    from { clip-path: inset(0 0 0 0); }
-    to { clip-path: inset(0 0 100% 0); }
-  }
-
-  /* legacy note — tile -> detail shared-element morph (transition:name):
+  /* the shared-element morph is gone; see closeFrames in app.js for what
+     replaced it. Kept below only for the easing note, which still applies
+     to the works-grid hover.
      the (root) rules above are more specific and keep winning for root, so
      this wildcard only reaches the per-slug named groups. Slower than the
      root crossfade so the image reads as gliding into place while the rest

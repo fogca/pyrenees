@@ -80,7 +80,35 @@ function curtainOut() {
 }
 
 let curtainNav = false;
-let wipeNav = false;
+let framesNav = false;
+
+/* ——— leaving a page that has pictures ————————————————
+   Every frame closes from its bottom edge upward, in place: the picture
+   itself never moves or scales, it is progressively cut off. The one that
+   was clicked is left alone — it is where the visitor is going. Runs before
+   the swap (the navigation is held on e.loader), so the outgoing DOM is
+   still there to animate. */
+const FRAMES = '[data-frame]';
+
+function closeFrames(clicked) {
+  const frames = [...document.querySelectorAll(FRAMES)]
+    .filter((f) => !clicked || !f.contains(clicked) && !clicked.contains(f));
+  if (!frames.length) return Promise.resolve(false);
+  if (REDUCED) {
+    frames.forEach((f) => f.style.setProperty('--cut', '100%'));
+    return Promise.resolve(true);
+  }
+  // nearest-first: the ones by the pointer go before the ones across the page
+  const oy = clicked ? clicked.getBoundingClientRect().top : 0;
+  frames.sort((a, b) => Math.abs(a.getBoundingClientRect().top - oy)
+    - Math.abs(b.getBoundingClientRect().top - oy));
+  return gsap.to(frames, {
+    '--cut': '100%',
+    duration: 0.52,
+    ease: 'power3.inOut',
+    stagger: 0.045,
+  }).then(() => true);
+}
 
 document.addEventListener('astro:before-preparation', (e) => {
   // A picture clicked on the top strip or the works grid rides the
@@ -89,12 +117,26 @@ document.addEventListener('astro:before-preparation', (e) => {
   // A menu row has no on-screen counterpart to morph from, so it takes the
   // curtain like any other navigation.
   const link = e.sourceElement?.closest?.('[data-work-link], .tp__card');
-  curtainNav = !link;
+  // the frame is a DESCENDANT of the link, so closest() alone never finds it
+  const clickedFrame = e.sourceElement?.closest?.(FRAMES)
+    ?? e.sourceElement?.querySelector?.(FRAMES)
+    ?? null;
+  const hasFrames = document.querySelector(FRAMES) !== null;
+  // A page with pictures says goodbye with them; a page without falls back
+  // to the ink curtain.
+  framesNav = hasFrames;
+  curtainNav = !link && !hasFrames;
   // the wipe belongs to picture navigations; the curtain covers the rest
-  wipeNav = !!link;
-  document.documentElement.classList.toggle('is-wipe', wipeNav);
-  if (!curtainNav) return;
+
   const originalLoader = e.loader;
+  if (framesNav) {
+    e.loader = async function () {
+      await closeFrames(clickedFrame);
+      await originalLoader();
+    };
+    return;
+  }
+  if (!curtainNav) return;
   e.loader = async function () {
     await curtainIn(labelFor(new URL(e.to).pathname));
     await originalLoader();
@@ -109,17 +151,12 @@ document.addEventListener('astro:before-swap', (e) => {
   // in the ::view-transition layer ABOVE the ink. Skip the transition
   // entirely: the swap is covered, nothing is lost, and cards no longer
   // fly across the curtain.
-  if (wipeNav) {
-    // The class has to survive until the animation ENDS. after-swap is far
-    // too early — the swap happens at the START of a view transition — and
-    // the swap itself can replace the <html> attributes, so it is re-applied
-    // there and only cleared once the transition reports finished.
-    e.viewTransition?.finished
-      ?.catch(() => {})
-      .finally(() => {
-        document.documentElement.classList.remove('is-wipe');
-        wipeNav = false;
-      });
+  // The frames have already closed by hand; a crossfade on top of that
+  // would put the old page back for the length of the transition.
+  if (framesNav) {
+    e.viewTransition?.ready?.catch(() => {});
+    e.viewTransition?.finished?.catch(() => {});
+    e.viewTransition?.skipTransition?.();
   }
   if (curtainNav) {
     // skipTransition() rejects the transition's own promises; nothing here
@@ -165,12 +202,6 @@ let top = null;
 document.addEventListener('astro:before-swap', () => {
   top?.leave();
   top = null;
-});
-
-document.addEventListener('astro:after-swap', () => {
-  // ClientRouter copies the incoming document's <html> attributes over, so
-  // the flag set before the swap can be wiped along with them
-  if (wipeNav) document.documentElement.classList.add('is-wipe');
 });
 
 document.addEventListener('astro:page-load', () => {

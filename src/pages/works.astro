@@ -31,7 +31,7 @@ const EAGER_COUNT = 8; // first screenful loads eagerly, the rest lazily
             aria-label={`${it.title}, ${it.year}`}
           >
             {/* The figure box is sized from the true aspect, never cropped. */}
-            <figure class="works__fig" style={`--aspect:${it.aspect}`}>
+            <figure class="works__fig" data-frame style={`--aspect:${it.aspect}`}>
               <img
                 src={it.image}
                 alt={it.title}
@@ -89,6 +89,8 @@ const EAGER_COUNT = 8; // first screenful loads eagerly, the rest lazily
   .works__cell { display: block; }
 
   .works__fig {
+    /* driven by app.js on the way out — see closeFrames */
+    clip-path: inset(0 0 var(--cut, 0%) 0);
     margin: 0;
     aspect-ratio: var(--aspect, 1.4);
     overflow: clip;

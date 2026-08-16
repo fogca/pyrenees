@@ -21,7 +21,7 @@ const next = archive[(i + 1) % archive.length];
 
     <h1 class="detail__title u-page">{entry.title}</h1>
 
-    <figure class="detail__hero" style={`--aspect:${entry.aspect}`}>
+    <figure class="detail__hero" data-frame style={`--aspect:${entry.aspect}`}>
       <img src={entry.image} alt={entry.title} width={entry.width} height={entry.height} />
     </figure>
 
@@ -54,7 +54,7 @@ const next = archive[(i + 1) % archive.length];
     <!-- plates — stacked clean, each at its own true aspect -->
     <div class="detail__gallery">
       {entry.gallery.map((g) => (
-        <figure class="detail__gfig" style={`--aspect:${g.aspect}`}>
+        <figure class="detail__gfig" data-frame style={`--aspect:${g.aspect}`}>
           <img src={g.src} alt={entry.title} width={g.w} height={g.h} loading="lazy" />
         </figure>
       ))}
@@ -90,6 +90,8 @@ const next = archive[(i + 1) % archive.length];
      those two fight and collapse the box (already fixed once on the plates
      below). min() keeps a tall frame from running past one screen. */
   .detail__hero {
+    /* driven by app.js on the way out — see closeFrames */
+    clip-path: inset(0 0 var(--cut, 0%) 0);
     width: 100vw;
     margin-left: calc(50% - 50vw);
     height: min(calc(100vw / var(--aspect)), 100vh);
@@ -133,6 +135,7 @@ const next = archive[(i + 1) % archive.length];
     gap: clamp(20px, 3vh, 40px);
   }
   .detail__gfig {
+    clip-path: inset(0 0 var(--cut, 0%) 0);
     /* no explicit width — with one, max-height wins and the aspect box
        collapses to a letterboxed crop; auto width honours both constraints */
     aspect-ratio: var(--aspect);

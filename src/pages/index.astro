@@ -27,7 +27,7 @@ const feature = archive;
           data-title={it.title}
           aria-label={it.title}
         >
-          <figure class="tp__fig">
+          <figure class="tp__fig" data-frame>
             <img
               src={it.plate}
               alt={it.title}
@@ -114,6 +114,8 @@ const feature = archive;
      against it as the frame crosses the viewport. Measured off the
      reference: the content lags the frame by ~10% of its travel. */
   .tp__fig {
+    /* driven by app.js on the way out — see closeFrames */
+    clip-path: inset(0 0 var(--cut, 0%) 0);
     position: relative;
     width: 100%;
     height: 100%;
@@ -219,6 +221,11 @@ const feature = archive;
     margin: -3.5px 0 0 -3.5px;
     background: var(--color-ink);
     z-index: calc(var(--z-stage) + 2);
+    /* it sits dead centre and outlives the opening at opacity 0, where it
+       was still swallowing clicks — which is exactly where the centred
+       frame is, so the most obvious thing to click was the one that did
+       nothing */
+    pointer-events: none;
     opacity: 0;
     transition: opacity 0.25s ease;
   }
