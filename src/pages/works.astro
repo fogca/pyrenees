@@ -5,7 +5,7 @@ import T from '../components/T.astro';
 import archive from '../data/archive.json';
 // Works — the catalogue index, rebuilt 2026-08-14 against the NAKORNSANG
 // reference. The rules are strict and few:
-//   1. A fixed column width (5 up on desktop, 2 on mobile). Every image in a
+//   1. A fixed column width (4 up on desktop, 2 on mobile). Every image in a
 //      column is exactly as wide as the column.
 //   2. Height follows the image's true aspect ratio, so nothing is cropped or
 //      warped. Rows therefore end ragged at the bottom — that is the look.
@@ -13,7 +13,24 @@ import archive from '../data/archive.json';
 //      free: each cell is a top-aligned block, so every figure in a row starts
 //      at the same y, and the caption sits under its own image.
 //   4. Almost no text: a running number, the title, the year. Nothing else.
+//   5. One cell per row is left EMPTY and stays empty — the grid does not
+//      close up around it. Which one is picked per row is arbitrary but
+//      fixed: a seeded hash rather than Math.random, so the page does not
+//      reshuffle itself on every build and the diffs stay readable.
 const EAGER_COUNT = 8; // first screenful loads eagerly, the rest lazily
+const COLS = 4;
+const blankFor = (row) => {
+  const n = Math.sin(row * 12.9898 + 4.1414) * 43758.5453;
+  return Math.min(COLS - 1, Math.floor((n - Math.floor(n)) * COLS));
+};
+// lay the entries into rows, dropping a hole into each
+const cells = [];
+for (let i = 0, row = 0; i < archive.length; row++) {
+  const hole = blankFor(row);
+  for (let c = 0; c < COLS; c++) {
+    cells.push(c === hole || i >= archive.length ? null : archive[i++]);
+  }
+}
 ---
 <Base title="Image Creation — Pyrenees Pictures Studio">
   <main class="page-wrapper works">
@@ -22,7 +39,9 @@ const EAGER_COUNT = 8; // first screenful loads eagerly, the rest lazily
     </header>
 
     <ul class="works__grid">
-      {archive.map((it, i) => (
+      {cells.map((it, i) => (it === null ? (
+        <li class="works__item works__item--gap" aria-hidden="true"></li>
+      ) : (
         <li class="works__item">
           <a
             class="works__cell"
@@ -48,7 +67,7 @@ const EAGER_COUNT = 8; // first screenful loads eagerly, the rest lazily
             </p>
           </a>
         </li>
-      ))}
+      )))}
     </ul>
 
   </main>
@@ -80,7 +99,7 @@ const EAGER_COUNT = 8; // first screenful loads eagerly, the rest lazily
     padding: 0;
     list-style: none;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     align-items: start;
     column-gap: clamp(12px, 1.4vw, 22px);
     row-gap: clamp(36px, 5vh, 68px);
@@ -129,6 +148,10 @@ const EAGER_COUNT = 8; // first screenful loads eagerly, the rest lazily
 
 
   /* 5 up (PC) -> 4 -> 3 (tablet) -> 2 (SP) */
+  /* a hole in a two-column grid costs half a row, so phones run dense */
+  @media (max-width: 900px) {
+    .works__item--gap { display: none; }
+  }
   @media (max-width: 620px) {
     .works { padding-top: 72px; }
     .works__grid {
