@@ -31,7 +31,7 @@ const EAGER_COUNT = 8; // first screenful loads eagerly, the rest lazily
             aria-label={`${it.title}, ${it.year}`}
           >
             {/* The figure box is sized from the true aspect, never cropped. */}
-            <figure class="works__fig" transition:name={`tile-${it.slug}`} style={`--aspect:${it.aspect}`}>
+            <figure class="works__fig" style={`--aspect:${it.aspect}`}>
               <img
                 src={it.image}
                 alt={it.title}

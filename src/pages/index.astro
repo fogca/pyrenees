@@ -27,7 +27,7 @@ const feature = archive;
           data-title={it.title}
           aria-label={it.title}
         >
-          <figure class="tp__fig" transition:name={`tile-${it.slug}`}>
+          <figure class="tp__fig">
             <img
               src={it.plate}
               alt={it.title}
@@ -147,10 +147,12 @@ const feature = archive;
   .tp__flip {
     display: block;
     position: relative;
-    /* the box the faces turn inside; both are absolutely placed in it */
-    height: 1.5em;
+    /* The box the faces turn inside. line-height 1 on purpose: any leading
+       is empty space that rotates with the face, and the turn reads as a
+       taller block tumbling rather than the words themselves. */
+    height: 1em;
     font-size: clamp(14px, 1.5vw, 22px);
-    line-height: 1.5;
+    line-height: 1;
     letter-spacing: 0.02em;
     text-transform: uppercase;
     font-variant-numeric: tabular-nums;
@@ -162,7 +164,7 @@ const feature = archive;
     inset: 0;
     display: flex;
     gap: 0.7em;
-    align-items: baseline;
+    align-items: center;
     white-space: nowrap;
     backface-visibility: hidden;
     transform-origin: 50% 50%;
@@ -237,13 +239,19 @@ const feature = archive;
     .tp__run { position: relative; z-index: -1; }
     .tp__strip { left: 0; width: 100%; }
     .tp__cross { display: none; }
+    /* the name reads as a caption to the strip on a phone, so it sits
+       centred under it rather than hanging off the left edge */
     .tp__meta {
       top: auto;
-      bottom: 20px;
+      bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+      left: 0;
+      right: 0;
+      width: auto;
       transform: none;
-      width: 62vw;
+      text-align: center;
     }
     .tp__flip { font-size: 12px; }
+    .tp__face { justify-content: center; }
   }
 
   @media (prefers-reduced-motion: reduce) {

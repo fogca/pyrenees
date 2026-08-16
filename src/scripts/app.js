@@ -80,6 +80,7 @@ function curtainOut() {
 }
 
 let curtainNav = false;
+let wipeNav = false;
 
 document.addEventListener('astro:before-preparation', (e) => {
   // A picture clicked on the top strip or the works grid rides the
@@ -89,6 +90,9 @@ document.addEventListener('astro:before-preparation', (e) => {
   // curtain like any other navigation.
   const link = e.sourceElement?.closest?.('[data-work-link], .tp__card');
   curtainNav = !link;
+  // the wipe belongs to picture navigations; the curtain covers the rest
+  wipeNav = !!link;
+  document.documentElement.classList.toggle('is-wipe', wipeNav);
   if (!curtainNav) return;
   const originalLoader = e.loader;
   e.loader = async function () {
@@ -105,6 +109,18 @@ document.addEventListener('astro:before-swap', (e) => {
   // in the ::view-transition layer ABOVE the ink. Skip the transition
   // entirely: the swap is covered, nothing is lost, and cards no longer
   // fly across the curtain.
+  if (wipeNav) {
+    // The class has to survive until the animation ENDS. after-swap is far
+    // too early — the swap happens at the START of a view transition — and
+    // the swap itself can replace the <html> attributes, so it is re-applied
+    // there and only cleared once the transition reports finished.
+    e.viewTransition?.finished
+      ?.catch(() => {})
+      .finally(() => {
+        document.documentElement.classList.remove('is-wipe');
+        wipeNav = false;
+      });
+  }
   if (curtainNav) {
     // skipTransition() rejects the transition's own promises; nothing here
     // awaits them, so swallow it or every curtain navigation logs an
@@ -149,6 +165,12 @@ let top = null;
 document.addEventListener('astro:before-swap', () => {
   top?.leave();
   top = null;
+});
+
+document.addEventListener('astro:after-swap', () => {
+  // ClientRouter copies the incoming document's <html> attributes over, so
+  // the flag set before the swap can be wiped along with them
+  if (wipeNav) document.documentElement.classList.add('is-wipe');
 });
 
 document.addEventListener('astro:page-load', () => {

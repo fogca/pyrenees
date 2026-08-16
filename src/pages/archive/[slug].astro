@@ -21,7 +21,7 @@ const next = archive[(i + 1) % archive.length];
 
     <h1 class="detail__title u-page">{entry.title}</h1>
 
-    <figure class="detail__hero" style={`--aspect:${entry.aspect}`} transition:name={`tile-${entry.slug}`}>
+    <figure class="detail__hero" style={`--aspect:${entry.aspect}`}>
       <img src={entry.image} alt={entry.title} width={entry.width} height={entry.height} />
     </figure>
 
