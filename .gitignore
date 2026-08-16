@@ -34,6 +34,9 @@ public/icon-512.png
 # redistribute in a public repo. Delete the folder to fall back to the
 # studio's own frames in scripts/source-images/.
 scripts/placeholder-photos/
+# ...and a couple of them dropped into a project folder as a stand-in hero.
+# Same reason: not ours to republish. Delete the file to fall back.
+CMS/**/*_wine.jpg
 
 # Unica 77 LL — Lineto WEB TRIAL. Internal/dev evaluation only, explicitly not
 # cleared for a public production domain, so committing it here would be

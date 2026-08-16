@@ -115,7 +115,12 @@ const NAMES = {
 };
 const dirName = (dir) => {
   const key = dir.replace(/^\d+[_-]?/, '');
-  return NAMES[key] ?? key.replace(/[_-]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+  if (NAMES[key]) return NAMES[key];
+  return key
+    // JohnSmith -> John Smith, but MIYAKE is left alone
+    .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
+    .replace(/[_-]+/g, ' ')
+    .replace(/\b\w/g, (c) => c.toUpperCase());
 };
 // A NUMBER IS THE PUBLISH FLAG. A folder without one is still being decided
 // on and does not go on the site — drop the number back off to pull an entry
@@ -158,12 +163,17 @@ function readEntryFile(dir) {
   return { front, body: m[2].trim() };
 }
 
+/* Pictures live in `images/`, but a photo dropped straight into the project
+   folder counts too — that is the obvious thing to do, and ignoring it looks
+   exactly like a folder nobody has filled in. */
 function realImages(dir) {
-  const d = join(CMS_DIR, dir, 'images');
-  if (!existsSync(d)) return [];
-  return readdirSync(d).sort()
-    .map((f) => join(d, f))
-    .filter(isImageFile);
+  const root = join(CMS_DIR, dir);
+  const sub = join(root, 'images');
+  const pick = (d) => (existsSync(d)
+    ? readdirSync(d).sort().map((f) => join(d, f)).filter(isImageFile)
+    : []);
+  const found = pick(sub);
+  return found.length ? found : pick(root);
 }
 
 const slugify = (t) => t.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');

@@ -1,19 +1,38 @@
 [
   {
     "no": "01",
-    "slug": "pru",
-    "title": "PRU",
+    "slug": "ysove2001",
+    "title": "YSOVE 2001",
     "category": null,
     "monthName": null,
     "year": 2026,
-    "aspect": 0.7501,
-    "image": "/images/archive/01_pru-01.webp",
-    "width": 1600,
-    "height": 2133,
-    "plate": "/images/archive/01_pru-01-plate.webp",
-    "plateW": 760,
-    "plateH": 1013,
-    "gallery": [],
+    "aspect": 0.7503,
+    "image": "/images/archive/p01.webp",
+    "width": 736,
+    "height": 981,
+    "plate": "/images/archive/p01-plate.webp",
+    "plateW": 736,
+    "plateH": 981,
+    "gallery": [
+      {
+        "src": "/images/archive/p08.webp",
+        "w": 736,
+        "h": 920,
+        "aspect": 0.8
+      },
+      {
+        "src": "/images/archive/p04.webp",
+        "w": 1080,
+        "h": 1350,
+        "aspect": 0.8
+      },
+      {
+        "src": "/images/archive/p05.webp",
+        "w": 1200,
+        "h": 1590,
+        "aspect": 0.7547
+      }
+    ],
     "body": null,
     "credits": [
       [
@@ -26,12 +45,12 @@
       ]
     ],
     "code": "PP01",
-    "placeholderImages": false
+    "placeholderImages": true
   },
   {
     "no": "02",
-    "slug": "ysove2001",
-    "title": "YSOVE 2001",
+    "slug": "rangefinder",
+    "title": "Rangefinder",
     "category": null,
     "monthName": null,
     "year": 2026,
@@ -78,36 +97,24 @@
   },
   {
     "no": "03",
-    "slug": "rangefinder",
-    "title": "Rangefinder",
+    "slug": "pru",
+    "title": "PRU",
     "category": null,
     "monthName": null,
     "year": 2026,
-    "aspect": 1.7021,
-    "image": "/images/archive/p07.webp",
-    "width": 960,
-    "height": 564,
-    "plate": "/images/archive/p07-plate.webp",
-    "plateW": 760,
-    "plateH": 447,
+    "aspect": 0.8,
+    "image": "/images/archive/03_pru-01.webp",
+    "width": 640,
+    "height": 800,
+    "plate": "/images/archive/03_pru-01-plate.webp",
+    "plateW": 640,
+    "plateH": 800,
     "gallery": [
       {
-        "src": "/images/archive/p04.webp",
-        "w": 1080,
-        "h": 1350,
-        "aspect": 0.8
-      },
-      {
-        "src": "/images/archive/p10.webp",
-        "w": 640,
-        "h": 800,
-        "aspect": 0.8
-      },
-      {
-        "src": "/images/archive/p01.webp",
-        "w": 736,
-        "h": 981,
-        "aspect": 0.7503
+        "src": "/images/archive/03_pru-02.webp",
+        "w": 1600,
+        "h": 2133,
+        "aspect": 0.7501
       }
     ],
     "body": null,
@@ -122,42 +129,23 @@
       ]
     ],
     "code": "PP03",
-    "placeholderImages": true
+    "placeholderImages": false
   },
   {
     "no": "04",
-    "slug": "msf",
-    "title": "MSF",
+    "slug": "johnsmith",
+    "title": "John Smith",
     "category": null,
     "monthName": null,
     "year": 2026,
-    "aspect": 0.8,
-    "image": "/images/archive/p10.webp",
-    "width": 640,
-    "height": 800,
-    "plate": "/images/archive/p10-plate.webp",
-    "plateW": 640,
-    "plateH": 800,
-    "gallery": [
-      {
-        "src": "/images/archive/p07.webp",
-        "w": 960,
-        "h": 564,
-        "aspect": 1.7021
-      },
-      {
-        "src": "/images/archive/p03.webp",
-        "w": 1200,
-        "h": 1500,
-        "aspect": 0.8
-      },
-      {
-        "src": "/images/archive/p04.webp",
-        "w": 1080,
-        "h": 1350,
-        "aspect": 0.8
-      }
-    ],
+    "aspect": 0.75,
+    "image": "/images/archive/04_JohnSmith-01.webp",
+    "width": 1200,
+    "height": 1600,
+    "plate": "/images/archive/04_JohnSmith-01-plate.webp",
+    "plateW": 760,
+    "plateH": 1013,
+    "gallery": [],
     "body": null,
     "credits": [
       [
@@ -170,7 +158,7 @@
       ]
     ],
     "code": "PP04",
-    "placeholderImages": true
+    "placeholderImages": false
   },
   {
     "no": "05",
@@ -203,6 +191,54 @@
   },
   {
     "no": "06",
+    "slug": "msf",
+    "title": "MSF",
+    "category": null,
+    "monthName": null,
+    "year": 2026,
+    "aspect": 0.8045,
+    "image": "/images/archive/p06.webp",
+    "width": 1000,
+    "height": 1243,
+    "plate": "/images/archive/p06-plate.webp",
+    "plateW": 760,
+    "plateH": 945,
+    "gallery": [
+      {
+        "src": "/images/archive/p03.webp",
+        "w": 1200,
+        "h": 1500,
+        "aspect": 0.8
+      },
+      {
+        "src": "/images/archive/p09.webp",
+        "w": 640,
+        "h": 801,
+        "aspect": 0.799
+      },
+      {
+        "src": "/images/archive/p10.webp",
+        "w": 640,
+        "h": 800,
+        "aspect": 0.8
+      }
+    ],
+    "body": null,
+    "credits": [
+      [
+        "Direction",
+        "Pyrenees Pictures Studio"
+      ],
+      [
+        "Year",
+        "2026"
+      ]
+    ],
+    "code": "PP06",
+    "placeholderImages": true
+  },
+  {
+    "no": "07",
     "slug": "sann",
     "title": "SANN",
     "category": null,
@@ -227,11 +263,11 @@
         "2026"
       ]
     ],
-    "code": "PP06",
+    "code": "PP07",
     "placeholderImages": false
   },
   {
-    "no": "07",
+    "no": "08",
     "slug": "jds",
     "title": "Japanese Dark Spirits",
     "category": null,
@@ -263,11 +299,11 @@
         "2026"
       ]
     ],
-    "code": "PP07",
+    "code": "PP08",
     "placeholderImages": false
   },
   {
-    "no": "08",
+    "no": "09",
     "slug": "ondo",
     "title": "Ondo",
     "category": null,
@@ -323,61 +359,13 @@
         "2026"
       ]
     ],
-    "code": "PP08",
+    "code": "PP09",
     "placeholderImages": false
   },
   {
-    "no": "09",
+    "no": "10",
     "slug": "miyake",
     "title": "MIYAKE",
-    "category": null,
-    "monthName": null,
-    "year": 2026,
-    "aspect": 0.7547,
-    "image": "/images/archive/p05.webp",
-    "width": 1200,
-    "height": 1590,
-    "plate": "/images/archive/p05-plate.webp",
-    "plateW": 760,
-    "plateH": 1007,
-    "gallery": [
-      {
-        "src": "/images/archive/p02.webp",
-        "w": 736,
-        "h": 737,
-        "aspect": 0.9986
-      },
-      {
-        "src": "/images/archive/p08.webp",
-        "w": 736,
-        "h": 920,
-        "aspect": 0.8
-      },
-      {
-        "src": "/images/archive/p09.webp",
-        "w": 640,
-        "h": 801,
-        "aspect": 0.799
-      }
-    ],
-    "body": null,
-    "credits": [
-      [
-        "Direction",
-        "Pyrenees Pictures Studio"
-      ],
-      [
-        "Year",
-        "2026"
-      ]
-    ],
-    "code": "PP09",
-    "placeholderImages": true
-  },
-  {
-    "no": "10",
-    "slug": "miles158",
-    "title": "MILES158",
     "category": null,
     "monthName": null,
     "year": 2026,
@@ -420,6 +408,54 @@
       ]
     ],
     "code": "PP10",
+    "placeholderImages": true
+  },
+  {
+    "no": "11",
+    "slug": "miles158",
+    "title": "MILES158",
+    "category": null,
+    "monthName": null,
+    "year": 2026,
+    "aspect": 0.7503,
+    "image": "/images/archive/p01.webp",
+    "width": 736,
+    "height": 981,
+    "plate": "/images/archive/p01-plate.webp",
+    "plateW": 736,
+    "plateH": 981,
+    "gallery": [
+      {
+        "src": "/images/archive/p08.webp",
+        "w": 736,
+        "h": 920,
+        "aspect": 0.8
+      },
+      {
+        "src": "/images/archive/p04.webp",
+        "w": 1080,
+        "h": 1350,
+        "aspect": 0.8
+      },
+      {
+        "src": "/images/archive/p05.webp",
+        "w": 1200,
+        "h": 1590,
+        "aspect": 0.7547
+      }
+    ],
+    "body": null,
+    "credits": [
+      [
+        "Direction",
+        "Pyrenees Pictures Studio"
+      ],
+      [
+        "Year",
+        "2026"
+      ]
+    ],
+    "code": "PP11",
     "placeholderImages": true
   }
 ]
