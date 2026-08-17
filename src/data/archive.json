@@ -154,6 +154,12 @@
         "w": 1600,
         "h": 1200,
         "aspect": 1.3333
+      },
+      {
+        "src": "/images/archive/04_JohnSmith-03.webp",
+        "w": 1600,
+        "h": 2000,
+        "aspect": 0.8
       }
     ],
     "body": null,
