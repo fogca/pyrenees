@@ -8,7 +8,7 @@ import Wordmark from './Wordmark.astro';
 
 interface Props { path: string }
 const { path } = Astro.props;
-const isWork = path.startsWith('/works') || path.startsWith('/archive');
+const isWork = path.startsWith('/creation') || path.startsWith('/archive');
 const isStudio = path.startsWith('/about');
 const isPrice = path.startsWith('/contact');
 ---
@@ -16,7 +16,7 @@ const isPrice = path.startsWith('/contact');
   <a class="hd__logo" href="/" aria-label="Pyrénées, home"><Wordmark /></a>
 
   <nav class="hd__nav u-micro" aria-label="Site">
-    <a href="/works" class:list={[{ 'is-on': isWork }]}>Creation</a>
+    <a href="/creation" class:list={[{ 'is-on': isWork }]}>Creation</a>
     <a href="/about" class:list={[{ 'is-on': isStudio }]}>Studio</a>
     <a href="/contact" class:list={[{ 'is-on': isPrice }]}>Contact</a>
     <!-- One label, not a pair: it reads as the language you are in, and

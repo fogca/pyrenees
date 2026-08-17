@@ -8,11 +8,15 @@ interface Props {
   /** Colour iOS Safari paints its toolbars with. Must match the page's own
       background or the bar reads as a foreign band above the content. */
   theme?: string;
+  /** Reachable, but kept out of the sitemap and out of search results —
+      for a page that is retained rather than published. */
+  noindex?: boolean;
 }
 const {
   title = 'Pyrenees Pictures Studio — An Image Studio, Tokyo',
   description = 'An image studio in Tokyo. Live action to full CG, whatever the picture needs.',
   theme = '#ffffff',
+  noindex = false,
 } = Astro.props;
 const path = Astro.url.pathname;
 const canonical = new URL(path, Astro.site);
@@ -26,6 +30,7 @@ const ogImage = new URL('/og.png', Astro.site);
   <title>{title}</title>
   <meta name="description" content={description} />
   <link rel="canonical" href={canonical} />
+  {noindex && <meta name="robots" content="noindex, follow" />}
 
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />

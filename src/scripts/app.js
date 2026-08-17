@@ -12,6 +12,7 @@ import Lenis from 'lenis';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { initTop } from './top.js';
+import { initMasonry } from './masonry.js';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -210,10 +211,13 @@ function whenFontplus(cb, timeoutMs = 6000) {
 }
 
 let top = null;
+let masonry = null;
 
 document.addEventListener('astro:before-swap', () => {
   top?.leave();
   top = null;
+  masonry?.destroy();
+  masonry = null;
 });
 
 document.addEventListener('astro:page-load', () => {
@@ -232,6 +236,8 @@ document.addEventListener('astro:page-load', () => {
 
   // '/' is the one path the build does not append a slash to, so equality is
   // safe here — anything deeper must compare with the trailing slash in mind.
+  masonry = initMasonry();
+
   if (document.body.dataset.path === '/') {
     top = initTop({ lenis: l, reduced: REDUCED });
     top?.enter();

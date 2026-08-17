@@ -1,0 +1,108 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import archive from '../data/archive.json';
+
+// Creation — the archive: every picture in the catalogue, not one cover per
+// project. Same register as /works (no captions, edge to edge on a phone),
+// but the tiles are laid out by shortest column rather than in aligned rows,
+// because a page of mixed aspect ratios has no rows worth aligning.
+//
+// /works is still there and still works; nothing links to it any more.
+
+// hero first, then its plates, project by project
+const tiles = archive.flatMap((it) => [
+  { src: it.image, w: it.width, h: it.height, aspect: it.aspect, it },
+  ...it.gallery.map((g) => ({ src: g.src, w: g.w, h: g.h, aspect: g.aspect, it })),
+]);
+const EAGER = 8;
+---
+<Base title="Image Creation — Pyrenees Pictures Studio">
+  <main class="page-wrapper cr">
+    <header class="cr__head">
+      <h1 class="u-page cr__title">Image Creation</h1>
+    </header>
+
+    <div class="cr__grid" data-masonry>
+      {tiles.map((t, i) => (
+        <a
+          class="cr__cell"
+          data-work-link
+          data-aspect={t.aspect}
+          href={`/archive/${t.it.slug}/`}
+          aria-label={`${t.it.title}, ${t.it.year}`}
+        >
+          <figure class="cr__fig" data-frame style={`--aspect:${t.aspect}`}>
+            <img
+              src={t.src}
+              alt={t.it.title}
+              width={t.w}
+              height={t.h}
+              loading={i < EAGER ? 'eager' : 'lazy'}
+              decoding="async"
+            />
+          </figure>
+        </a>
+      ))}
+    </div>
+  </main>
+
+  <SiteFooter />
+</Base>
+
+<style>
+  .page-wrapper { padding-inline: var(--pad-inline); }
+  .cr { padding-top: 96px; }
+  .cr__head { padding-bottom: 0; }
+  .cr__title { margin: 0; }
+
+  /* Before the script runs — and if it never does — this is a plain grid, so
+     the page is complete without JS. initMasonry then positions the tiles
+     absolutely and sets the container's height. */
+  .cr__grid {
+    position: relative;
+    margin-top: 30px;
+    margin-bottom: clamp(48px, 9vh, 120px);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    align-items: start;
+    gap: 20px;
+  }
+  .cr__grid[data-laid-out] { display: block; }
+  .cr__grid[data-laid-out] .cr__cell {
+    position: absolute;
+    top: 0;
+    left: 0;
+    will-change: transform;
+  }
+
+  .cr__cell { display: block; }
+  .cr__fig {
+    /* driven by app.js on the way out — see closeFrames */
+    clip-path: inset(0 0 var(--cut, 0%) 0);
+    margin: 0;
+    aspect-ratio: var(--aspect, 1.4);
+    overflow: clip;
+    background: var(--ink-04);
+  }
+  .cr__fig img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s cubic-bezier(0.16, 0.8, 0.24, 1);
+  }
+  .cr__cell:hover .cr__fig img { transform: scale(0.985); }
+
+  @media (max-width: 1023px) {
+    .cr__grid { grid-template-columns: repeat(2, 1fr); gap: 5px; }
+  }
+  @media (max-width: 620px) {
+    .cr { padding-top: 100px; }
+    /* edge to edge on a phone, out of the wrapper's inline padding */
+    .cr__grid {
+      width: 100vw;
+      margin-left: calc(50% - 50vw);
+    }
+  }
+</style>
