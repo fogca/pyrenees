@@ -101,8 +101,11 @@ for (let i = 0, row = 0; i < archive.length; row++) {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     align-items: start;
-    column-gap: clamp(12px, 1.4vw, 22px);
-    row-gap: clamp(36px, 5vh, 68px);
+    /* One gap in both directions. The rows used to be far deeper than the
+       columns to leave room for a caption under each picture; with the
+       captions off that space reads as the grid coming apart. Restore the
+       taller row-gap alongside the .works__cap rule below. */
+    gap: clamp(12px, 1.4vw, 22px);
   }
   .works__item { min-width: 0; }
   .works__cell { display: block; }
@@ -161,7 +164,6 @@ for (let i = 0, row = 0; i < archive.length; row++) {
     .works { padding-top: 72px; }
     .works__grid {
       grid-template-columns: repeat(2, 1fr);
-      row-gap: 34px;
     }
     .works__cap { flex-wrap: wrap; gap: 6px; }
     .works__year { margin-left: 0; }
