@@ -133,6 +133,11 @@ for (let i = 0, row = 0; i < archive.length; row++) {
     gap: 8px;
     margin-top: 14px;
   }
+  /* Captions are off for now (trying the index as pictures alone). The
+     markup stays — each link already carries the title and year in its
+     aria-label and the image alt, so a screen reader loses nothing. Delete
+     this one rule to bring the text back. */
+  .works__cap { display: none; }
   .works__no { color: var(--color-ink); opacity: 0.56; }
   .works__name {
     flex: 1 1 auto;
