@@ -10,11 +10,29 @@ import archive from '../data/archive.json';
 //
 // /works is still there and still works; nothing links to it any more.
 
-// hero first, then its plates, project by project
-const tiles = archive.flatMap((it) => [
+// Interleaved, not grouped. Laid out project by project, each project's
+// frames end up as a solid block on the page and the archive reads as a
+// stack of folders. Round-robin instead — every project's cover, then every
+// project's second frame, and so on — which puts as many other projects as
+// exist between any two frames of the same one, and incidentally leads with
+// the covers. Deterministic: no shuffle to re-roll on each build.
+const byProject = archive.map((it) => [
   { src: it.image, w: it.width, h: it.height, aspect: it.aspect, it },
   ...it.gallery.map((g) => ({ src: g.src, w: g.w, h: g.h, aspect: g.aspect, it })),
 ]);
+// Plain round-robin runs out: once only the deepest project has frames left
+// it lays them back to back at the end. Give every frame a position along
+// the page instead — the nth of k frames sits at (n + 0.5) / k — so a
+// six-frame project spreads across the whole thing and a one-frame project
+// lands in the middle. The project's own index breaks ties, which staggers
+// the projects that have the same number of frames.
+const tiles = byProject
+  .flatMap((frames, projectIndex) =>
+    frames.map((t, n) => ({
+      ...t,
+      key: (n + 0.5) / frames.length + projectIndex / (byProject.length * 1000),
+    })))
+  .sort((a, b) => a.key - b.key);
 const EAGER = 8;
 ---
 <Base title="Image Creation — Pyrenees Pictures Studio">
