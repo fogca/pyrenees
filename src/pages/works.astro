@@ -86,7 +86,7 @@ for (let i = 0, row = 0; i < archive.length; row++) {
   }
 
   /* ——— header: the one big thing on the page ——— */
-  .works__head { padding-bottom: clamp(14px, 2vh, 22px); }
+  .works__head { padding-bottom: 0; }
   .works__title { margin: 0; }
 
   /* ——— the XY grid ———
@@ -94,7 +94,7 @@ for (let i = 0, row = 0; i < archive.length; row++) {
      start` keeps every cell hanging from the row's top line; the differing
      figure heights then leave the row ragged at the bottom, as intended. */
   .works__grid {
-    margin-top: clamp(28px, 5vh, 64px);
+    margin-top: 30px;
     margin-bottom: clamp(48px, 9vh, 120px);
     padding: 0;
     list-style: none;
@@ -161,9 +161,15 @@ for (let i = 0, row = 0; i < archive.length; row++) {
     .works__item--gap { display: none; }
   }
   @media (max-width: 620px) {
-    .works { padding-top: 72px; }
+    .works { padding-top: 100px; }
     .works__grid {
       grid-template-columns: repeat(2, 1fr);
+      /* edge to edge on a phone: out of the wrapper's inline padding and
+         across the viewport. 50% - 50vw rather than a raw 100vw so a
+         scrollbar cannot push it sideways. */
+      width: 100vw;
+      margin-left: calc(50% - 50vw);
+      gap: 5px;
     }
     .works__cap { flex-wrap: wrap; gap: 6px; }
     .works__year { margin-left: 0; }
