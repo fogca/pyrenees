@@ -48,6 +48,20 @@ const { entry } = Astro.props;
       </div>
     )}
 
+    {entry.spec && (
+      <p class="detail__spec u-micro">
+        <span class="t-en">
+          Unofficial concept work. Not affiliated with, endorsed by, or produced
+          in partnership with {entry.spec}. Created for portfolio/personal
+          exploration purposes only.
+        </span>
+        <span class="t-ja">
+          非公式のコンセプトワークです。{entry.spec} との提携、承認、協業の関係は
+          ありません。ポートフォリオおよび個人的な探求のために制作したものです。
+        </span>
+      </p>
+    )}
+
     <!-- plates — stacked clean, each at its own true aspect -->
     <div class="detail__gallery">
       {entry.gallery.map((g) => (
@@ -115,6 +129,16 @@ const { entry } = Astro.props;
     width: min(100%, 52ch);
     font-size: 12.5px;
     line-height: 1.55;
+  }
+
+  /* Spec-work notice. Quiet but present, and set in the same small register
+     as the rest of the metadata — a disclaimer that shouts reads as an
+     apology. Every character is inside the licensed glyph set. */
+  .detail__spec {
+    margin-top: clamp(28px, 4.5vh, 56px);
+    max-width: 62ch;
+    line-height: 1.55;
+    opacity: 0.62;
   }
 
   .detail__gallery {

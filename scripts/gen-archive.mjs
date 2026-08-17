@@ -187,6 +187,14 @@ for (let i = 0; i < PROJECTS.length; i++) {
   const category = (front.category && front.category.trim()) || null;
   const year = Number(front.year) || 2026;
   const monthName = front.month && MONTHS.includes(front.month) ? front.month : null;
+  // Spec work: unsolicited concept pieces made around a brand we have no
+  // relationship with. `spec: true` names the brand after the project's own
+  // title; `spec: "Some Brand"` states it exactly. Anything falsy and the
+  // notice does not appear at all.
+  const specRaw = (front.spec ?? '').trim();
+  const spec = !specRaw || specRaw === 'false' ? null
+    : specRaw === 'true' ? title
+    : specRaw;
 
   // pictures: the folder's own if it has any, otherwise the placeholder pool
   const own = realImages(dir);
@@ -234,6 +242,7 @@ for (let i = 0; i < PROJECTS.length; i++) {
     plateH: hero.plateH,
     gallery,
     body: body || null,
+    spec,
     credits: front.credits?.length ? front.credits : GENERIC_CREDITS,
     // catalogue code: the category's two letters when one is set, else the
     // studio's own prefix
